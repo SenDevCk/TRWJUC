@@ -1,7 +1,8 @@
-package com.bih.nic.bsphcl.trwjuc
+package com.bih.nic.bsphcl.trwjuc.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.bih.nic.bsphcl.trwjuc.R
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

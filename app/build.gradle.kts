@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
-
 android {
     namespace = "com.bih.nic.bsphcl.trwjuc"
     compileSdk = 34
@@ -15,6 +14,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    buildFeatures {
+        dataBinding = true
     }
 
     buildTypes {
@@ -44,4 +51,21 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+
+    // retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
+
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+
+    // ViewModel and LiveData
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha01")
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha01")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0-alpha01")
+
 }

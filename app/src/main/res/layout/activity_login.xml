@@ -3,7 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".LoginActivity">
+    tools:context=".ui.LoginActivity">
+    <data>
+        <variable
+            name="userViewModel"
+            type="com.bih.nic.bsphcl.trwjuc.ui.auth.AuthViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,10 +16,13 @@
           <RelativeLayout
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_margin="10dp">
+              >
+
               <LinearLayout
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginRight="10dp"
                   android:orientation="vertical">
 
                   <ImageView
@@ -27,11 +35,11 @@
                   <TextView
                       android:id="@+id/text_head"
                       android:layout_width="match_parent"
-                      android:layout_height="24dp"
+                      android:layout_height="wrap_content"
                       android:layout_alignParentBottom="true"
                       android:gravity="center"
                       android:text="TRWJUC"
-                      android:textColor="@android:color/holo_blue_light"
+                      android:textColor="@color/my_dark_primary"
                       android:textFontWeight="@integer/material_motion_duration_long_2"
                       android:textSize="25sp" />
 
@@ -41,34 +49,38 @@
                       android:layout_gravity="center_horizontal"
                       android:layout_margin="20dp"
                       android:orientation="vertical">
+
                       <RadioGroup
                           android:id="@+id/rg_company"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:visibility="gone"
-                          android:orientation="horizontal">
+                          android:orientation="horizontal"
+                          android:visibility="gone">
+
                           <RadioButton
                               android:id="@+id/rb_com_sb"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
-                              android:text="SBPDCL"/>
+                              android:text="SBPDCL" />
+
                           <RadioButton
                               android:id="@+id/rb_com_nb"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
-                              android:text="NBPDCL"/>
+                              android:text="NBPDCL" />
                       </RadioGroup>
+
                       <com.google.android.material.textfield.TextInputLayout
                           android:id="@+id/uname_text_input"
                           style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                           android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          >
+                          android:layout_height="wrap_content">
 
                           <com.google.android.material.textfield.TextInputEditText
                               android:id="@+id/edit_user_name"
                               android:layout_width="match_parent"
                               android:layout_height="wrap_content"
+                              android:text="@={userViewModel.userId}"
                               android:hint="Userid" />
                       </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,13 +89,13 @@
                           style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="10dp"
-                          >
+                          android:layout_marginTop="10dp">
 
                           <com.google.android.material.textfield.TextInputEditText
                               android:id="@+id/edit_pass"
                               android:layout_width="match_parent"
                               android:layout_height="wrap_content"
+                              android:text="@={userViewModel.password}"
                               android:hint="password" />
                       </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +108,8 @@
                       android:layout_gravity="center_horizontal"
                       android:layout_margin="20dp"
                       android:text="Login"
-                      android:textColor="#ffffff" />
+                      android:textColor="#ffffff"
+                      app:backgroundTint="@color/design_default_color_primary_dark" />
 
                   <TextView
                       android:id="@+id/text_forget_pass"
@@ -114,8 +127,8 @@
                       android:id="@+id/text_ver"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:gravity="center"
                       android:layout_marginTop="10dp"
+                      android:gravity="center"
                       android:text="Version"
                       android:textColor="@android:color/black"
                       android:textSize="15sp"
@@ -142,7 +155,6 @@
                   android:text="Services provided by: NIC Bihar"
                   android:textColor="@android:color/white" />
           </RelativeLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
