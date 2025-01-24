@@ -18,9 +18,6 @@ android {
 
     buildFeatures {
         viewBinding = true
-    }
-
-    buildFeatures {
         dataBinding = true
     }
 
@@ -62,10 +59,11 @@ dependencies {
 
     // ViewModel and LiveData
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha01")
+    //implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0-alpha01")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation("androidx.databinding:databinding-runtime:8.8.0")
 
 }

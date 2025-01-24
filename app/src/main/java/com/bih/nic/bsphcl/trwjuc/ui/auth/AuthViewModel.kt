@@ -11,13 +11,16 @@ class AuthViewModel : ViewModel() {
     var userId : String?=null
     var password : String?=null
 
-    fun login(view : View){
+    var authListner:AuthListner?=null
+
+    fun loginButtonClick(view : View){
+         authListner?.onStartLogin()
         if (userId.isNullOrEmpty()||userId.isNullOrBlank()){
-
+            authListner?.onFailure("User Id must not be blanck !")
         }else if (password.isNullOrEmpty()||password.isNullOrBlank()){
-
+            authListner?.onFailure("Password must not be blanck !")
         }else{
-
+            authListner?.onSuccess()
         }
     }
 }

@@ -109,6 +109,7 @@
                       android:layout_margin="20dp"
                       android:text="Login"
                       android:textColor="#ffffff"
+                      android:onClick="@{userViewModel::loginButtonClick}"
                       app:backgroundTint="@color/design_default_color_primary_dark" />
 
                   <TextView
