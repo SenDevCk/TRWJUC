@@ -16,18 +16,12 @@ class MasterRegisterDetails {
     @ColumnInfo(name = "palce") val place: String?=null
     @ColumnInfo(name = "capacity") val capacity: String?=null
     @ColumnInfo(name = "date_of_testing") val dateOfTesting: String?=null
-    @ColumnInfo(name = "place") val place: String?=null
-    @ColumnInfo(name = "dob") val dob: String?=null
-    @ColumnInfo(name = "capacity") val capacity: String?=null
-    @ColumnInfo(name = "year_of_manufacturing") val yearOfManufacturing: Int?=null
-    @ColumnInfo(name = "make") val make: String?=null
-    @ColumnInfo(name = "oil_capacity") val oilCapacity: String?=null
-    @ColumnInfo(name = "oil_found") val oilFound: String?=null
-    @ColumnInfo(name = "dtr_body_found") val dtrBodyFound: Char?=null
-    @ColumnInfo(name = "ht_stud") val htStud: String?=null
-    @ColumnInfo(name = "lt_stud") val ltStud: String?=null
-    @ColumnInfo(name = "ht_bushing") val htBushing: String?=null
-    @ColumnInfo(name = "lt_bushing") val ltBushing: String?=null
+    @ColumnInfo(name = "svr_no") val svrNo: String?=null
+    @ColumnInfo(name = "date_of_svr") val dateOfSvr: String?=null
+    @ColumnInfo(name = "date_of_issue") val dateOfIssue: String?=null
+    @ColumnInfo(name = "gate_pass_no") val gatePassNo: Int?=null
+    @ColumnInfo(name = "siv_cdt_no") val sivCdtNo: String?=null
+    @ColumnInfo(name = "issued_to") val issuedTo: String?=null
     @ColumnInfo(name = "remarks") val remarks: String?=null
 
 }
