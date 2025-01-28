@@ -1,5 +1,6 @@
 package com.bih.nic.bsphcl.trwjuc.data
 
+import androidx.lifecycle.ViewModel
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,7 +10,7 @@ import androidx.room.PrimaryKey
  *Created by Chandan Singh on 1/27/2025.
  */
 @Entity
-class DtrDetail {
+class DtrDetail{
     @PrimaryKey
     val uid: Int?=null
     @ColumnInfo(name = "circle") val circle: String?=null
