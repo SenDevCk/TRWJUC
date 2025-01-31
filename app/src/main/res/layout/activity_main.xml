@@ -19,18 +19,17 @@
             android:id="@+id/app_bar_lay_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            >
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar_sel_main"
+                android:id="@+id/toolbar_app_new"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/white"
-                app:title="BSPHCL"
-                app:titleTextColor="@color/design_default_color_primary_dark"
-                app:titleTextAppearance="@android:anim/linear_interpolator"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/MaterialAlertDialog.Material3"></androidx.appcompat.widget.Toolbar>
+                app:title="BSPHCL"
+                app:navigationIconTint="@color/design_default_color_primary_dark"
+                app:titleTextColor="@color/design_default_color_primary_dark"
+                />
         </com.google.android.material.appbar.AppBarLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,9 +37,11 @@
             android:layout_margin="10dp"
             android:layout_below="@+id/app_bar_lay_main"
             android:orientation="vertical">
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/design_default_color_primary_dark"
                 android:onClick="@{mainViewHolder::ApplyButtonClick}"
                 android:text="Apply new"
                 />

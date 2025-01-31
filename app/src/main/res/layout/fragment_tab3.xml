@@ -13,11 +13,23 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:orientation="vertical">
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/autoComplete"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/buttonshape"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/sp_year_man"
+                    style="@style/Widget.AppCompat.Spinner.DropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dropDownWidth="match_parent"
+                    android:hint="--Select Name of Material--"
+                    android:gravity="center"
+                    android:imeOptions="actionNext" />
+            </com.google.android.material.textfield.TextInputLayout>
             <LinearLayout
                 android:id="@+id/ll_entry"
                 android:layout_width="match_parent"
@@ -32,6 +44,7 @@
                     android:layout_weight=".5"
                     android:textStyle="bold"
                     android:paddingLeft="10dp"
+                    android:gravity="center"
                     android:background="@drawable/buttonshape"
                     android:hint="Size"/>
                 <EditText
@@ -43,6 +56,7 @@
                     android:paddingLeft="10dp"
                     android:background="@drawable/buttonshape"
                     android:layout_marginLeft="5dp"
+                    android:gravity="center"
                     android:hint="kg"/>
             </LinearLayout>
             <Button
