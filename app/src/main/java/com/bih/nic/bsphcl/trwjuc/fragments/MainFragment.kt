@@ -1,60 +1,56 @@
 package com.bih.nic.bsphcl.trwjuc.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.databinding.FragmentMainBinding
+import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab1Binding
+import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
+import com.bih.nic.bsphcl.trwjuc.ui.ApplyForNewUC
+import com.bih.nic.bsphcl.trwjuc.ui.main.MainClickHandler
+import com.bih.nic.bsphcl.trwjuc.ui.main.MainViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MainFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MainFragment : Fragment() {
+class MainFragment : Fragment(),MainClickHandler {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        val binding: FragmentMainBinding? = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_main,
+            container,
+            false
+        )
+        // Check if binding is not null before accessing it
+        binding?.let {
+            // Obtain ViewModel instance
+            val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+            // Set the ViewModel to the binding
+            it.mainViewModel = viewModel
+
+            // Set the lifecycle owner to make LiveData observable
+            it.lifecycleOwner = viewLifecycleOwner
+            viewModel.mainClickHandler = this
+            return it.root
+        }
+
+        // Return null if binding is null (shouldn't happen)
+        return null
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MainFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MainFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun applyNewClick() {
+        val intent = Intent(requireContext(), ApplyForNewUC::class.java)
+       this.startActivity(intent)
     }
 }

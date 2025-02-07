@@ -10,7 +10,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/nav_home"
-            android:title="Home"/>
+            android:title="Apply New"/>
 
         <item
             android:id="@+id/nav_settings"

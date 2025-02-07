@@ -67,10 +67,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        drawerLayout.closeDrawer(GravityCompat.START)
             when (item.itemId) {
-                R.id.nav_home -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
-                //                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.fragment_container, HomeFragment()).commit()
+                R.id.nav_home -> {
+                    val intent = Intent(this, ApplyForNewUC::class.java)
+                    this.startActivity(intent)
+
+                }
                 R.id.nav_settings -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
 //                    supportFragmentManager.beginTransaction()
 //                    .replace(R.id.fragment_container, SettingsFragment()).commit()
@@ -82,7 +85,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    .replace(R.id.fragment_container, AboutFragment()).commit()
                 R.id.nav_logout -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
             }
-            drawerLayout.closeDrawer(GravityCompat.START)
+
             return true
         }
         override fun onBackPressed() {

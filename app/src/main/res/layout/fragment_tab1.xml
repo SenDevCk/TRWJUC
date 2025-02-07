@@ -212,8 +212,6 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="@{tab1ViewModel.dtrBodySelection}"
-                    app:onCheckedChanged="@{(checked) -> tab1ViewModel.onRadioButtonSelected(checked)}"
                     android:orientation="horizontal">
 
                     <RadioButton

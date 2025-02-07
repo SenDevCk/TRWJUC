@@ -12,8 +12,9 @@ import com.bih.nic.bsphcl.trwjuc.data.MasterRegisterDetails
  *Created by Chandan Singh on 1/27/2025.
  */
 @Dao
-interface MasterRegisterDao { @Query("SELECT * FROM MasterRegisterDetails")
-fun getAll(): List<MasterRegisterDetails>
+interface MasterRegisterDao {
+    @Query("SELECT * FROM MasterRegisterDetails")
+    fun getAll(): List<MasterRegisterDetails>
 
     @Query("SELECT * FROM MasterRegisterDetails WHERE uid IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<MasterRegisterDetails>
@@ -23,8 +24,8 @@ fun getAll(): List<MasterRegisterDetails>
 //    fun findByName(first: String, last: String): MasterRegisterDetails
 
     @Insert
-    fun insertAll(vararg users: MasterRegisterDetails)
+    fun insertAll(vararg masterRegisterDetails: MasterRegisterDetails)
 
     @Delete
-    fun delete(user: MasterRegisterDetails)
+    fun delete(masterRegisterDetails: MasterRegisterDetails)
 }
