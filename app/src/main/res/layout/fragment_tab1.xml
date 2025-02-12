@@ -54,6 +54,7 @@
                         android:dropDownWidth="match_parent"
                         android:imeOptions="actionNext"
                         android:entries="@{tab1ViewModel.circleList}" />
+                    <!--android:onItemSelected="@{tab1ViewModel.onItemSelect}"-->
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

@@ -1,73 +1,230 @@
 package com.bih.nic.bsphcl.trwjuc.ui
 
+import CommanPref
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.room.Room
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import com.bih.nic.bsphcl.trwjuc.retrofit.DataApi
 import com.bih.nic.bsphcl.trwjuc.retrofit.RetrofitHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
 
     var progressBar: ProgressBar?=null
-
-
+    var appDataBase : AppDatabase?=null
+    var progressMessage : TextView?=null
+    var sessionData: CommanPref?=null
+    val handler = Handler(Looper.getMainLooper())
+    override fun onStart() {
+        super.onStart()
+        sessionData= CommanPref.getInstance(applicationContext)
+        sessionData?.saveData("appdata","N")
+        appDataBase= Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "trw_db"
+        ).build()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        progressBar =findViewById<ProgressBar>(R.id.progress_bar)
-
+        this.progressBar =findViewById<ProgressBar>(R.id.progress_bar)
+        this.progressMessage = findViewById<TextView>(R.id.progress_message)
+        var appData=  sessionData?.getData("appdata")
+        if (appData.toString().trim().equals("N")) {
+            getCircle()
+        }else{
+            start()
+        }
     }
 
-    fun getCircle(){
+    fun getCircle() {
+        // Show progress bar while the network call is happening
+        progressBar?.visibility = View.VISIBLE
+        progressMessage?.text="Loading Circle...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
-        // launching a new coroutine
-        GlobalScope.launch {
-            val result = dataApi.getCircle()
-            if (result != null)
-            // Checking the results
-                progressBar?.isGone
-            Log.d("chandan: ", result.body().toString())
+
+        // Launching the coroutine using ViewModelScope (instead of GlobalScope)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                progressBar?.visibility = View.GONE
+                val result = dataApi.getCircle()
+
+                // Check if result is not null
+                if (result.isSuccessful) {
+                    result.body()?.let { circleList ->
+                        // Insert data into the database
+                        val cirDao = appDataBase?.circleDao()
+                        cirDao?.insertAll(circleList)
+
+                        // Log the result
+                        Log.d("chandan:", circleList.toString())
+
+                        // Call getDivision after successful insert
+                        getDivision()
+                    } ?: run {
+                        // Handle case when the body is null
+                        Log.d("chandan:", "No data available")
+                    }
+                } else {
+                    // Log the error or handle the failure case
+                    Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                // Handle network or other errors
+                Log.e("chandan:", "Error during API call: ${e.message}")
+            } finally {
+                // Hide the progress bar regardless of success or failure
+                progressBar?.visibility = View.GONE
+            }
         }
     }
 
     fun getDivision(){
+        // Show progress bar while the network call is happening
+        progressBar?.visibility = View.VISIBLE
+        progressMessage?.text="Loading Division...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
-        // launching a new coroutine
-        GlobalScope.launch {
-            val result = dataApi.getDivision()
-            if (result != null)
-            // Checking the results
-                progressBar?.isGone
-            Log.d("chandan: ", result.body().toString())
+        // Launching the coroutine using ViewModelScope (instead of GlobalScope)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                progressBar?.visibility = View.GONE
+                val result = dataApi.getDivision()
+
+                // Check if result is not null
+                if (result.isSuccessful) {
+                    result.body()?.let { divList ->
+                        // Insert data into the database
+                        val divisionDao = appDataBase?.divisionDao()
+                        divisionDao?.insertAll(divList)
+
+                        // Log the result
+                        Log.d("chandan:", divList.toString())
+
+                        // Call getDivision after successful insert
+                        getSubDivision()
+                    } ?: run {
+                        // Handle case when the body is null
+                        Log.d("chandan:", "No data available")
+                    }
+                } else {
+                    // Log the error or handle the failure case
+                    Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                // Handle network or other errors
+                Log.e("chandan:", "Error during API call: ${e.message}")
+            } finally {
+                // Hide the progress bar regardless of success or failure
+                progressBar?.visibility = View.GONE
+            }
         }
     }
 
     fun getSubDivision(){
+        // Show progress bar while the network call is happening
+        progressBar?.visibility = View.VISIBLE
+        progressMessage?.text="Loading Subdivision...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
-        // launching a new coroutine
-        GlobalScope.launch {
-            val result = dataApi.getSubdivision()
-            if (result != null)
-            // Checking the results
-                progressBar?.isGone
-            Log.d("chandan: ", result.body().toString())
+        // Launching the coroutine using ViewModelScope (instead of GlobalScope)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                progressBar?.visibility = View.GONE
+                val result = dataApi.getSubdivision()
+
+                // Check if result is not null
+                if (result.isSuccessful) {
+                    result.body()?.let { subdivList ->
+                        // Insert data into the database
+                        val divisionDao = appDataBase?.subDivisionDao()
+                        divisionDao?.insertAll(subdivList)
+
+                        // Log the result
+                        Log.d("chandan:", subdivList.toString())
+
+                        // Call getDivision after successful insert
+                        getSection()
+                    } ?: run {
+                        // Handle case when the body is null
+                        Log.d("chandan:", "No data available")
+                    }
+                } else {
+                    // Log the error or handle the failure case
+                    Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                // Handle network or other errors
+                Log.e("chandan:", "Error during API call: ${e.message}")
+            } finally {
+                // Hide the progress bar regardless of success or failure
+                progressBar?.visibility = View.GONE
+            }
         }
     }
 
-    fun getSection(){
+    fun getSection() {
+        // Show progress bar while the network call is happening
+        progressBar?.visibility = View.VISIBLE
+        progressMessage?.text="Loading Section...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
-        // launching a new coroutine
-        GlobalScope.launch {
-            val result = dataApi.getSection()
-            if (result != null)
-            // Checking the results
-                progressBar?.isGone
-            Log.d("chandan: ", result.body().toString())
+        // Launching the coroutine using ViewModelScope (instead of GlobalScope)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                progressBar?.visibility = View.GONE
+                val result = dataApi.getSection()
+
+                // Check if result is not null
+                if (result.isSuccessful) {
+                    result.body()?.let { secListList ->
+                        // Insert data into the database
+                        val sectionDao = appDataBase?.sectionDao()
+                        sectionDao?.insertAll(secListList)
+
+                        // Log the result
+                        Log.d("chandan:", secListList.toString())
+
+                        progressMessage?.text="Done.."
+                        sessionData?.saveData("appdata","Y")
+                        start()
+                    } ?: run {
+                        // Handle case when the body is null
+                        Log.d("chandan:", "No data available")
+                    }
+                } else {
+                    // Log the error or handle the failure case
+                    Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                // Handle network or other errors
+                Log.e("chandan:", "Error during API call: ${e.message}")
+            } finally {
+                // Hide the progress bar regardless of success or failure
+                progressBar?.visibility = View.GONE
+            }
         }
+    }
+    fun start(){
+        // Post a task with a delay of 2 seconds (2000ms)
+        progressMessage?.text="Wait.."
+        handler.postDelayed({
+            // Code to execute after the delay
+          var appData=  sessionData?.getData("appdata")
+            if (appData.toString().trim().equals("Y")){
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
+                this.startActivity(intent)
+            }
+        }, 5000)
     }
 }

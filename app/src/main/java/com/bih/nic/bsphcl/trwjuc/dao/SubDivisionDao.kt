@@ -15,10 +15,10 @@ interface SubDivisionDao {
     fun getAllSubDivision(): List<Subdivision>
 
     @Query("SELECT * FROM Subdivision where circleId=(:circleId)")
-    fun getAllSubdivisionByCircle(circleId: String): List<Subdivision>
+    fun getSubdivisionByCircle(circleId: String): List<Subdivision>
 
     @Query("SELECT * FROM Subdivision where divId=(:divId)")
-    fun getAllSubdivisionByDivision(divId: String): List<Subdivision>
+    fun getSubdivisionByDivision(divId: String): List<Subdivision>
 
     @Insert
     fun insertAll(vararg subdivisions: List<Subdivision>)

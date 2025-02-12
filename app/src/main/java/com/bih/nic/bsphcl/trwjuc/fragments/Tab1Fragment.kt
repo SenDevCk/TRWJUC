@@ -86,6 +86,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedSubdivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
+                binding.tab1ViewModel.onCircleSelected(selectedSubdivision)
                 Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
@@ -104,14 +105,15 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 divisions
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.optionSubdivision.adapter = adapter
+            binding.optionDivision.adapter = adapter
         })
 
-        binding.optionSubdivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.optionDivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedSubdivision = parent.getItemAtPosition(position) as String
+                val selectedDivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
+                binding.tab1ViewModel.onDivisionSelect(selectedDivision)
+                Toast.makeText(requireContext(), "Selected: $selectedDivision", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -136,6 +138,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedSubdivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
+                binding.tab1ViewModel.onSubDivisionSelect(selectedSubdivision)
                 Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
@@ -160,9 +163,10 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
         binding.optionSubdivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedSubdivision = parent.getItemAtPosition(position) as String
-                // Handle the selected subdivision
-                Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
+                val selectedsection = parent.getItemAtPosition(position) as String
+                // Handle the selected section
+                binding.tab1ViewModel.onSectionSelect(selectedsection)
+                Toast.makeText(requireContext(), "Selected: $selectedsection", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {

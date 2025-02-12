@@ -20,7 +20,8 @@ interface SectionDao {
 
     @Query("SELECT * FROM Section where divId=(:divId)")
     fun getAllSectionByDivision(divId: String): List<Section>
-
+    @Query("SELECT * FROM Section where subDivId=(:subDivId)")
+    fun getAllSectionBySubdiv(subDivId: String): List<Section>
     @Insert
     fun insertAll(vararg sections: List<Section>)
 

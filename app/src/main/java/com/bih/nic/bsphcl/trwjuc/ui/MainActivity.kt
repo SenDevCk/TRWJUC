@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.nav_home -> {
                     val intent = Intent(this, ApplyForNewUC::class.java)
                     this.startActivity(intent)
-
                 }
                 R.id.nav_settings -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
 //                    supportFragmentManager.beginTransaction()

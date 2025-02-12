@@ -12,13 +12,13 @@ import com.bih.nic.bsphcl.trwjuc.data.DtrDetail
  */
 interface CircleDao {
     @Query("SELECT * FROM Circle")
-    fun getAll(): List<DtrDetail>
+    fun getAll(): List<Circle>
 
     @Insert
     fun insertAll(vararg circles: List<Circle>)
 
     @Delete
-    fun delete(user: Circle)
+    fun delete(circle: Circle)
 
     @Query("delete FROM Circle")
     fun deleteAllCircle()
