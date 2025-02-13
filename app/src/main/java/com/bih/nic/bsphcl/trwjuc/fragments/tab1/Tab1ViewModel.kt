@@ -23,7 +23,6 @@ class Tab1ViewModel(application: Application) : ViewModel() {
 
     private val _selectedSection = MutableLiveData<String>()
     val selectedSection: LiveData<String> get() = _selectedSection
-    val section: String? = null
     val place: String? = null
     val dob: String? = null
     val capacity: String? = null
@@ -40,6 +39,8 @@ class Tab1ViewModel(application: Application) : ViewModel() {
     val htBushing: String? = null
     val ltBushing: String? = null
     val remarks: String? = null
+    private val _selectedYear = MutableLiveData<Int>()
+    val selectedYear: LiveData<Int> get() = _selectedYear
     //circleList
     private val _circleList = MutableLiveData<List<String>>()
     val circleList: LiveData<List<String>> get() = _circleList
@@ -98,10 +99,7 @@ class Tab1ViewModel(application: Application) : ViewModel() {
     }
 
     // Method to update the selected radio button (when user changes selection)
-    fun onRadioButtonSelected(selectedOption: String) {
-        Log.d("selectedOption : ",""+selectedOption)
-        _dtrBodySelection.value = selectedOption
-    }
+
     private fun fetchCircles() {
         viewModelScope.launch {
             // Launch a coroutine to fetch data asynchronously
@@ -201,5 +199,16 @@ class Tab1ViewModel(application: Application) : ViewModel() {
 
     fun onSectionSelect(selectedSec: String) {
         _selectedSection.value = selectedSec
+    }
+
+    fun setSelectedDtr(option: String) {
+        _dtrBodySelection.value = option
+    }
+
+    fun setSelectedHTSTUD(option: String) {
+        _dtrBodySelection.value = option
+    }
+    fun setSelectedYear(year: Int) {
+        _selectedYear.value = year
     }
 }

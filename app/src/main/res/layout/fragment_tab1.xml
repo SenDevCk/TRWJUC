@@ -151,23 +151,34 @@
                         android:hint="Capacity" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:text="Year"
+                    android:textColor="@color/design_default_color_primary" />
 
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/sp_year_man"
-                        style="@style/Widget.AppCompat.Spinner.DropDown"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/buttonshape"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:dropDownWidth="match_parent"
-                        android:hint="--Select Year--"
+                        android:layout_gravity="center"
+                        android:layout_weight=".8"
+                        android:gravity="center"
                         android:text="@{tab1ViewModel.yearOfManufacturing}"
-                        android:imeOptions="actionNext" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:textStyle="bold" />
 
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight=".2"
+                        android:src="@android:drawable/ic_menu_my_calendar" />
+                </LinearLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -211,11 +222,14 @@
                     android:textColor="@color/design_default_color_primary" />
 
                 <RadioGroup
+                    android:id="@+id/radio_group_dtr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    >
 
                     <RadioButton
+                        android:id="@+id/radio_group_dtr_ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OK"
@@ -223,11 +237,12 @@
                          />
 
                     <RadioButton
+                        android:id="@+id/radio_group_dtr_notok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="NOT"
                         android:value="NOT"
-                        />
+                         />
                 </RadioGroup>
 
                 <TextView
@@ -237,21 +252,25 @@
                     android:textColor="@color/design_default_color_primary" />
 
                 <RadioGroup
+                    android:id="@+id/radio_group_htstud"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
+                        android:id="@+id/radio_group_htstud_ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OK" />
 
                     <RadioButton
+                        android:id="@+id/radio_group_htstud_def"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Def." />
 
                     <RadioButton
+                        android:id="@+id/radio_group_htstud_miss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Missing" />
@@ -264,21 +283,25 @@
                     android:textColor="@color/design_default_color_primary" />
 
                 <RadioGroup
+                    android:id="@+id/radio_group_ltstud"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
+                        android:id="@+id/radio_group_ltstud_ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OK" />
 
                     <RadioButton
+                        android:id="@+id/radio_group_ltstud_def"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Def." />
 
                     <RadioButton
+                        android:id="@+id/radio_group_ltstud_miss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Missing" />
@@ -291,21 +314,25 @@
                     android:textColor="@color/design_default_color_primary" />
 
                 <RadioGroup
+                    android:id="@+id/radio_group_htbuss"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
+                        android:id="@+id/radio_group_htbuss_ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OK" />
 
                     <RadioButton
+                        android:id="@+id/radio_group_htbuss_def"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Def." />
 
                     <RadioButton
+                        android:id="@+id/radio_group_htbuss_miss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Missing" />
@@ -318,21 +345,25 @@
                     android:textColor="@color/design_default_color_primary" />
 
                 <RadioGroup
+                    android:id="@+id/radio_group_ltbuss"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
+                        android:id="@+id/radio_group_ltbuss_ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OK" />
 
                     <RadioButton
+                        android:id="@+id/radio_group_ltbuss_def"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Def." />
 
                     <RadioButton
+                        android:id="@+id/radio_group_ltbuss_miss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Missing" />
@@ -347,6 +378,7 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
                         android:hint="Remarks.."
+                        android:text="@{tab1ViewModel.remarks}"
                         android:maxLines="3" />
                 </com.google.android.material.textfield.TextInputLayout>
 

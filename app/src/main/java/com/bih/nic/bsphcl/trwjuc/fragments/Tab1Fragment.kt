@@ -14,19 +14,23 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bih.nic.bsphcl.trwjuc.R
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab1Binding
+import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab2Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
-
+import com.bih.nic.bsphcl.trwjuc.fragments.tab2.Tab2ViewModel
+import com.bih.nic.bsphcl.trwjuc.utils.YearPickerDialog
+import java.util.Calendar
 
 
 class Tab1Fragment : Fragment(), Tab1Listner {
-
+    private lateinit var binding: FragmentTab1Binding
+    private lateinit var viewModel: Tab1ViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment using DataBinding
-        val binding: FragmentTab1Binding? = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_tab1,
             container,
@@ -35,7 +39,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         // Check if binding is not null before accessing it
         binding?.let {
             // Obtain ViewModel instance
-            val viewModel = ViewModelProvider(this).get(Tab1ViewModel::class.java)
+            viewModel = ViewModelProvider(this).get(Tab1ViewModel::class.java)
 
             // Set the ViewModel to the binding
             it.tab1ViewModel = viewModel
@@ -48,7 +52,11 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             populateDivision(viewModel,binding)
             populateSubdivision(viewModel,binding)
             populateSection(viewModel,binding)
-
+            dtrBodyFound(viewModel,binding)
+            htStud(viewModel,binding)
+            ltStud(viewModel,binding)
+            htbussiing(viewModel,binding)
+            ltbussiing(viewModel,binding)
             // Observe the LiveData for credential validation
 //            viewModel.isValidCredential.observe(viewLifecycleOwner, Observer { isValid ->
 //                if (isValid) {
@@ -67,11 +75,86 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         // Return null if binding is null (shouldn't happen)
         return null
     }
+   private fun dtrBodyFound(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+       binding?.radioGroupDtr?.setOnCheckedChangeListener { group, checkedId ->
+           when(checkedId){
+               R.id.radio_group_dtr_ok->{
+                   binding?.tab1ViewModel?.setSelectedDtr("OK")
+               }
+               R.id.radio_group_dtr_notok->{
+                   binding?.tab1ViewModel?.setSelectedDtr("NOT")
+               }
+           }
+       }
+   }
 
+    private fun htStud(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+        binding?.radioGroupHtstud?.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radio_group_htstud_ok->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                }
+                R.id.radio_group_htstud_def->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                }
+                R.id.radio_group_htstud_miss->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                }
+            }
+        }
+    }
+
+    private fun ltStud(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+        binding?.radioGroupLtstud?.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radio_group_ltstud_ok->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                }
+                R.id.radio_group_ltstud_def->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                }
+                R.id.radio_group_ltstud_miss->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                }
+            }
+        }
+    }
+
+    private fun htbussiing(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+        binding?.radioGroupHtbuss?.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radio_group_htbuss_ok->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                }
+                R.id.radio_group_htbuss_def->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                }
+                R.id.radio_group_htbuss_miss->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                }
+            }
+        }
+    }
+
+    private fun ltbussiing(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+        binding?.radioGroupLtbuss?.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radio_group_ltbuss_ok->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                }
+                R.id.radio_group_ltbuss_def->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                }
+                R.id.radio_group_ltbuss_miss->{
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                }
+            }
+        }
+    }
 
     private fun populateCircle(viewModel: Tab1ViewModel, binding: FragmentTab1Binding) {
         // Observe the subdivisionList LiveData
-        viewModel.circleList.observe(viewLifecycleOwner, Observer { circles ->
+        viewModel?.circleList?.observe(viewLifecycleOwner, Observer { circles ->
             // Set up the Spinner with the subdivision data
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -79,14 +162,14 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 circles
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.optionSubdivision.adapter = adapter
+            binding?.optionSubdivision?.adapter = adapter
         })
 
-        binding.optionCircle.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding?.optionCircle?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedSubdivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                binding.tab1ViewModel.onCircleSelected(selectedSubdivision)
+                binding?.tab1ViewModel?.onCircleSelected(selectedSubdivision)
                 Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
@@ -105,14 +188,14 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 divisions
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.optionDivision.adapter = adapter
+            binding?.optionDivision?.adapter = adapter
         })
 
-        binding.optionDivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding?.optionDivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedDivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                binding.tab1ViewModel.onDivisionSelect(selectedDivision)
+                binding?.tab1ViewModel?.onDivisionSelect(selectedDivision)
                 Toast.makeText(requireContext(), "Selected: $selectedDivision", Toast.LENGTH_SHORT).show()
             }
 
@@ -134,11 +217,11 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             binding.optionSubdivision.adapter = adapter
         })
 
-        binding.optionSubdivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding?.optionSubdivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedSubdivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                binding.tab1ViewModel.onSubDivisionSelect(selectedSubdivision)
+                binding?.tab1ViewModel?.onSubDivisionSelect(selectedSubdivision)
                 Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
@@ -150,7 +233,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
     private fun populateSection(viewModel: Tab1ViewModel, binding: FragmentTab1Binding) {
         // Observe the subdivisionList LiveData
-        viewModel.sectionList.observe(viewLifecycleOwner, Observer { sections ->
+        viewModel?.sectionList?.observe(viewLifecycleOwner, Observer { sections ->
             // Set up the Spinner with the subdivision data
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -158,14 +241,14 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 sections
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.optionSubdivision.adapter = adapter
+            binding?.optionSubdivision?.adapter = adapter
         })
 
-        binding.optionSubdivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding?.optionSubdivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedsection = parent.getItemAtPosition(position) as String
                 // Handle the selected section
-                binding.tab1ViewModel.onSectionSelect(selectedsection)
+                binding?.tab1ViewModel?.onSectionSelect(selectedsection)
                 Toast.makeText(requireContext(), "Selected: $selectedsection", Toast.LENGTH_SHORT).show()
             }
 
@@ -174,7 +257,16 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             }
         }
     }
+    private fun showYearPickerDialog() {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
+        // Show YearPickerDialog and pass the selected year back to the ViewModel
+        val yearPickerDialog = YearPickerDialog(requireContext(), currentYear) { selectedYear ->
+            // Send the selected year to the ViewModel
+            viewModel.setSelectedYear(selectedYear)
+        }
+        yearPickerDialog.show(requireActivity().supportFragmentManager, "Select Year of Manufacturing")
+    }
     override fun onSuccess() {
         //TODO("Not yet implemented")
         Log.d("log","hi onSuccess")
