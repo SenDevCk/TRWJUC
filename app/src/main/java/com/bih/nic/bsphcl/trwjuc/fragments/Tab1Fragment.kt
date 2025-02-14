@@ -267,6 +267,9 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
         yearPickerDialog.show(requireActivity().supportFragmentManager, "Select Year of Manufacturing")
     }
+    fun onCalendarIconClick(view: View) {
+        showYearPickerDialog()
+    }
     override fun onSuccess() {
         //TODO("Not yet implemented")
         Log.d("log","hi onSuccess")
