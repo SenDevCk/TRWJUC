@@ -7,4 +7,5 @@ package com.bih.nic.bsphcl.trwjuc.fragments.tab3
 interface Tab3Listner {
    fun  onSuccess()
     fun  onFailure()
+
 }

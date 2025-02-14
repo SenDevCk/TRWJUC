@@ -48,7 +48,11 @@ class Tab3Fregment : Fragment(),Tab3Listner {
                viewModel.tab3Listner = this
 
                // Set up the AutoCompleteTextView
-               val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, emptyList())
+               val adapter = ArrayAdapter(
+                   this,
+                   android.R.layout.simple_dropdown_item_1line, // Layout for dropdown items
+                   emptyList<String>() // Empty list as initial data
+               )
                binding.spYearMan.setAdapter(adapter)
 
                // Observe the material list and update the adapter
