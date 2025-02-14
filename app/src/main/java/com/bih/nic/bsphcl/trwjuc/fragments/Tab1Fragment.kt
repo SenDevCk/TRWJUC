@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab1Binding
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab2Binding
@@ -25,10 +26,12 @@ import java.util.Calendar
 class Tab1Fragment : Fragment(), Tab1Listner {
     private lateinit var binding: FragmentTab1Binding
     private lateinit var viewModel: Tab1ViewModel
+    var viewPager:ViewPager2?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
         // Inflate the layout for this fragment using DataBinding
         binding = DataBindingUtil.inflate(
             inflater,
@@ -271,9 +274,9 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         showYearPickerDialog()
     }
     override fun onSuccess() {
-        //TODO("Not yet implemented")
         Log.d("log","hi onSuccess")
         //requireContext().toast("hi onSuccess");
+        viewPager?.currentItem = 1
     }
 
     override fun onFailure() {

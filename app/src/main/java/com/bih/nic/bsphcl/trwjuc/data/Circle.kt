@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 /**
  *Created by Chandan Singh on 2/6/2025.
  */
-@Entity(tableName = "circles")
+@Entity
 class Circle {
     @PrimaryKey
     var circleId:String?=null

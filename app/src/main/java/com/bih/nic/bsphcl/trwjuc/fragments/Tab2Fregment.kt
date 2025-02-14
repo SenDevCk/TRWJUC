@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab1Binding
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab2Binding
@@ -20,12 +21,14 @@ import java.util.Calendar
 class Tab2Fregment : Fragment(), Tab2Listner {
     private lateinit var binding: FragmentTab2Binding
     private lateinit var viewModel: Tab2ViewModel
+    var viewPager: ViewPager2?=null
        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
            // Inflate the layout for this fragment using DataBinding
+           viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
            binding = DataBindingUtil.inflate(
                inflater,
                R.layout.fragment_tab2,
@@ -102,7 +105,7 @@ class Tab2Fregment : Fragment(), Tab2Listner {
         datePickerDialog.show()
     }
     override fun onSuccess() {
-
+        viewPager?.currentItem = 2
     }
 
     override fun onFailure() {

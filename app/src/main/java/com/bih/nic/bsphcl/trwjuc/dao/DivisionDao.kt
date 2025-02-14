@@ -1,5 +1,6 @@
 package com.bih.nic.bsphcl.trwjuc.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
@@ -11,6 +12,7 @@ import com.bih.nic.bsphcl.trwjuc.data.DtrDetail
 /**
  *Created by Chandan Singh on 2/6/2025.
  */
+@Dao
 interface DivisionDao {
 
     @Query("SELECT * FROM Division")
@@ -20,7 +22,7 @@ interface DivisionDao {
     fun getAllDivisionFromCircle(circleId: String): List<Division>
 
     @Insert
-    fun insertAll(vararg divisions: List<Division>)
+    fun insertAll(vararg divisions: Division)
 
     @Delete
     fun delete(division: Division)

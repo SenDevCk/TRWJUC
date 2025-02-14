@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import com.bih.nic.bsphcl.trwjuc.dao.CircleDao
 import com.bih.nic.bsphcl.trwjuc.dao.DivisionDao
 import com.bih.nic.bsphcl.trwjuc.dao.DtrDetailDao
+import com.bih.nic.bsphcl.trwjuc.dao.JobWiseMatUtilizationSegDao
 import com.bih.nic.bsphcl.trwjuc.dao.MasterRegisterDao
 import com.bih.nic.bsphcl.trwjuc.dao.SectionDao
 import com.bih.nic.bsphcl.trwjuc.dao.SubDivisionDao
@@ -29,6 +30,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun divisionDao(): DivisionDao
     abstract fun subDivisionDao(): SubDivisionDao
     abstract fun sectionDao(): SectionDao
-
+    abstract fun jobwiseMatUtilDao(): JobWiseMatUtilizationSegDao
 
 }

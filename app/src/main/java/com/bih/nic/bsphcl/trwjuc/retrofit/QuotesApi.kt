@@ -7,6 +7,7 @@ package com.bih.nic.bsphcl.trwjuc.retrofit
 
 import com.bih.nic.bsphcl.trwjuc.data.Circle
 import com.bih.nic.bsphcl.trwjuc.data.Division
+import com.bih.nic.bsphcl.trwjuc.data.JobwiseMaterialUtilizationSegment
 import com.bih.nic.bsphcl.trwjuc.data.Section
 import com.bih.nic.bsphcl.trwjuc.data.Subdivision
 import retrofit2.Response
@@ -25,4 +26,7 @@ interface DataApi {
 
     @GET("/api-trwjuc/appData/getSection")
     suspend fun getSection() : Response<List<Section>>
+
+    @GET("/api-trwjuc/appData/getJobwiseMatUtilizationSeg")
+    suspend fun getJobwiseMatUtilizationSeg() : Response<List<JobwiseMaterialUtilizationSegment>>
 }

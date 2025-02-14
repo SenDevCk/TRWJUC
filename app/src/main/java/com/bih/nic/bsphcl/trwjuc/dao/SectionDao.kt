@@ -1,5 +1,6 @@
 package com.bih.nic.bsphcl.trwjuc.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
@@ -10,6 +11,7 @@ import com.bih.nic.bsphcl.trwjuc.data.Subdivision
 /**
  *Created by Chandan Singh on 2/6/2025.
  */
+@Dao
 interface SectionDao {
 
     @Query("SELECT * FROM Section")
@@ -23,7 +25,7 @@ interface SectionDao {
     @Query("SELECT * FROM Section where subDivId=(:subDivId)")
     fun getAllSectionBySubdiv(subDivId: String): List<Section>
     @Insert
-    fun insertAll(vararg sections: List<Section>)
+    fun insertAll(vararg sections: Section)
 
     @Delete
     fun delete(section: Section)

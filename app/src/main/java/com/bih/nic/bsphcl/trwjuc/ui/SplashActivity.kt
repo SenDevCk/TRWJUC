@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.room.Room
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.data.JobwiseMaterialUtilizationSegment
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import com.bih.nic.bsphcl.trwjuc.retrofit.DataApi
 import com.bih.nic.bsphcl.trwjuc.retrofit.RetrofitHelper
@@ -64,13 +65,11 @@ class SplashActivity : AppCompatActivity() {
                 // Check if result is not null
                 if (result.isSuccessful) {
                     result.body()?.let { circleList ->
-                        // Insert data into the database
-                        val cirDao = appDataBase?.circleDao()
-                        cirDao?.insertAll(circleList)
-
                         // Log the result
                         Log.d("chandan:", circleList.toString())
-
+                        // Insert data into the database
+                        val cirDao = appDataBase?.circleDao()
+                        cirDao?.insertAll(*circleList.toTypedArray())
                         // Call getDivision after successful insert
                         getDivision()
                     } ?: run {
@@ -107,7 +106,7 @@ class SplashActivity : AppCompatActivity() {
                     result.body()?.let { divList ->
                         // Insert data into the database
                         val divisionDao = appDataBase?.divisionDao()
-                        divisionDao?.insertAll(divList)
+                        divisionDao?.insertAll(*divList.toTypedArray())
 
                         // Log the result
                         Log.d("chandan:", divList.toString())
@@ -146,13 +145,11 @@ class SplashActivity : AppCompatActivity() {
                 // Check if result is not null
                 if (result.isSuccessful) {
                     result.body()?.let { subdivList ->
-                        // Insert data into the database
-                        val divisionDao = appDataBase?.subDivisionDao()
-                        divisionDao?.insertAll(subdivList)
-
                         // Log the result
                         Log.d("chandan:", subdivList.toString())
-
+                        // Insert data into the database
+                        val divisionDao = appDataBase?.subDivisionDao()
+                        divisionDao?.insertAll(*subdivList.toTypedArray())
                         // Call getDivision after successful insert
                         getSection()
                     } ?: run {
@@ -187,13 +184,54 @@ class SplashActivity : AppCompatActivity() {
                 // Check if result is not null
                 if (result.isSuccessful) {
                     result.body()?.let { secListList ->
-                        // Insert data into the database
-                        val sectionDao = appDataBase?.sectionDao()
-                        sectionDao?.insertAll(secListList)
-
                         // Log the result
                         Log.d("chandan:", secListList.toString())
+                        // Insert data into the database
+                        val sectionDao = appDataBase?.sectionDao()
+                        sectionDao?.insertAll(*secListList.toTypedArray())
 
+
+                        getJobWiseMatUtilizationSeg()
+//                        progressMessage?.text="Done.."
+//                        sessionData?.saveData("appdata","Y")
+//                        start()
+                    } ?: run {
+                        // Handle case when the body is null
+                        Log.d("chandan:", "No data available")
+                    }
+                } else {
+                    // Log the error or handle the failure case
+                    Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                // Handle network or other errors
+                Log.e("chandan:", "Error during API call: ${e.message}")
+            } finally {
+                // Hide the progress bar regardless of success or failure
+                progressBar?.visibility = View.GONE
+            }
+        }
+    }
+
+    fun getJobWiseMatUtilizationSeg() {
+        // Show progress bar while the network call is happening
+        progressBar?.visibility = View.VISIBLE
+        progressMessage?.text="Loading JObs...."
+        val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
+        // Launching the coroutine using ViewModelScope (instead of GlobalScope)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                progressBar?.visibility = View.GONE
+                val result = dataApi.getJobwiseMatUtilizationSeg()
+
+                // Check if result is not null
+                if (result.isSuccessful) {
+                    result.body()?.let { jobUtilList ->
+                        // Insert data into the database
+                        Log.d("chandan:",jobUtilList.toString())
+                        val jwmuDao = appDataBase?.jobwiseMatUtilDao()
+                        jwmuDao?.insertAll(*jobUtilList.toTypedArray())
+                        // Log the result
                         progressMessage?.text="Done.."
                         sessionData?.saveData("appdata","Y")
                         start()
@@ -214,6 +252,7 @@ class SplashActivity : AppCompatActivity() {
             }
         }
     }
+
     fun start(){
         // Post a task with a delay of 2 seconds (2000ms)
         progressMessage?.text="Wait.."
