@@ -103,7 +103,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun onNextButtonClicked(view :View){
-      Log.d("log","onNextButtonClicked Coming....")
+        Log.d("log","onNextButtonClicked Coming....")
         tab1Listner?.onSuccess()
 
     }

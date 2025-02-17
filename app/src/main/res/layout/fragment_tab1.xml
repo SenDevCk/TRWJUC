@@ -237,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:text="OK"
                         android:value="OK"
-                         />
+                        />
 
                     <RadioButton
                         android:id="@+id/radio_group_dtr_notok"
@@ -245,7 +245,7 @@
                         android:layout_height="wrap_content"
                         android:text="NOT"
                         android:value="NOT"
-                         />
+                        />
                 </RadioGroup>
 
                 <TextView

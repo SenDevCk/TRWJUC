@@ -20,7 +20,7 @@ class ApplyForNewUC : AppCompatActivity() {
         // Set the back button icon (if not already set in XML)
         //toolbar.setNavigationIcon(R.drawable.ic_back) // Your custom back button icon
 
-  // Enable the back navigation button (up button)
+        // Enable the back navigation button (up button)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Apply New" // Set Toolbar title

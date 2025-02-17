@@ -82,18 +82,18 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         // Return null if binding is null (shouldn't happen)
         return null
     }
-   private fun dtrBodyFound(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
-       binding?.radioGroupDtr?.setOnCheckedChangeListener { group, checkedId ->
-           when(checkedId){
-               R.id.radio_group_dtr_ok->{
-                   binding?.tab1ViewModel?.setSelectedDtr("OK")
-               }
-               R.id.radio_group_dtr_notok->{
-                   binding?.tab1ViewModel?.setSelectedDtr("NOT")
-               }
-           }
-       }
-   }
+    private fun dtrBodyFound(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+        binding?.radioGroupDtr?.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radio_group_dtr_ok->{
+                    binding?.tab1ViewModel?.setSelectedDtr("OK")
+                }
+                R.id.radio_group_dtr_notok->{
+                    binding?.tab1ViewModel?.setSelectedDtr("NOT")
+                }
+            }
+        }
+    }
 
     private fun htStud(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
         binding?.radioGroupHtstud?.setOnCheckedChangeListener { group, checkedId ->
@@ -175,7 +175,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         binding?.optionCircle?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //val selectedSubdivision = parent.getItemAtPosition(position) as String
-                    val item = binding?.tab1ViewModel?.circles?.get(position)
+                val item = binding?.tab1ViewModel?.circles?.get(position)
                 if (item != null) {
                     binding?.tab1ViewModel?.onCircleSelected(item.circleId)
                 }
@@ -205,7 +205,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
         binding?.optionDivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-               // val selectedDivision = parent.getItemAtPosition(position) as String
+                // val selectedDivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
                 val item = binding?.tab1ViewModel?.divisions?.get(position)
                 if (item != null) {

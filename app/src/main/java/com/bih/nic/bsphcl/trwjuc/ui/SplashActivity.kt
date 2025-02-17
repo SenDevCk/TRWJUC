@@ -74,7 +74,7 @@ class SplashActivity : AppCompatActivity() {
 
                 if (result.isSuccessful) {
                     result.body()?.let { circleList ->
-                       // Log.d("chandan:", circleList.toString())
+                        // Log.d("chandan:", circleList.toString())
                         val countCir = appDataBase?.circleDao()?.countCircle() ?: 0
                         if (countCir<=0) {
                             // ✅ Insert data into the database on IO thread
@@ -259,7 +259,7 @@ class SplashActivity : AppCompatActivity() {
         progressMessage?.text="Wait.."
         handler.postDelayed({
             // Code to execute after the delay
-          var appData1=  sessionData?.getData("appdata")
+            var appData1=  sessionData?.getData("appdata")
             if (appData1.equals("Y", ignoreCase = true)){
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
