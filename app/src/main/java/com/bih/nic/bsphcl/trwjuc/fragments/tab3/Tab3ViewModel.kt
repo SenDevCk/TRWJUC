@@ -1,19 +1,22 @@
 package com.bih.nic.bsphcl.trwjuc.fragments.tab3
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
  *Created by Chandan Singh on 2/14/2025.
  */
-class Tab3ViewModel(application: Application) : ViewModel(){
+class Tab3ViewModel(application: Application) : AndroidViewModel(application){
     var tab3Listner: Tab3Listner?=null
     var appDataBase : AppDatabase?=null
 
@@ -33,10 +36,13 @@ class Tab3ViewModel(application: Application) : ViewModel(){
     }
 
     private fun populateMaterialList() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
             val circles = appDataBase?.jobwiseMatUtilDao()?.getAllMatSeg() ?: emptyList()
-            _materialList.value = circles.map { it?.materialName.toString() } // Assuming `Circle` has a `name` property
+            withContext(Dispatchers.Main) {
+                _materialList.value =
+                    circles.map { it?.materialName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 

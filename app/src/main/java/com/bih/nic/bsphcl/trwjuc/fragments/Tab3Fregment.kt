@@ -22,7 +22,7 @@ class Tab3Fregment : Fragment(),Tab3Listner {
     private lateinit var binding: FragmentTab3Binding
     private lateinit var viewModel: Tab3ViewModel
     var viewPager: ViewPager2?=null
-    var recycler_view : RecyclerView ?=null
+    //var recycler_view : RecyclerView ?=null
        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,12 +46,12 @@ class Tab3Fregment : Fragment(),Tab3Listner {
                // Set the lifecycle owner to make LiveData observable
                it.lifecycleOwner = viewLifecycleOwner
                viewModel.tab3Listner = this
-
+               val myList: MutableList<String> = mutableListOf()
                // Set up the AutoCompleteTextView
-               val adapter = ArrayAdapter(
-                   this,
+               var adapter = ArrayAdapter(
+                   requireActivity(),
                    android.R.layout.simple_dropdown_item_1line, // Layout for dropdown items
-                   emptyList<String>() // Empty list as initial data
+                   myList
                )
                binding.spYearMan.setAdapter(adapter)
 

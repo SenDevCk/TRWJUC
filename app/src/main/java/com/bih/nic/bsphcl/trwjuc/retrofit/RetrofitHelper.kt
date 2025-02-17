@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object RetrofitHelper {
 
-    val baseUrl = "http://localhost:8086/api-trwjuc/"
+    val baseUrl = Urls.baseUrl
 
     fun getInstance(): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl)

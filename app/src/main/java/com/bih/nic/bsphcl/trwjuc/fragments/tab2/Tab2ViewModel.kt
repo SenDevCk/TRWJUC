@@ -3,6 +3,7 @@ package com.bih.nic.bsphcl.trwjuc.fragments.tab2
 import android.app.Application
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,7 @@ import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1Listner
 /**
  *Created by Chandan Singh on 2/13/2025.
  */
-class Tab2ViewModel(application: Application): ViewModel() {
+class Tab2ViewModel(application: Application): AndroidViewModel(application) {
 
     var tab2Listner: Tab2Listner?=null
     // LiveData to observe the selected date
@@ -57,7 +58,7 @@ class Tab2ViewModel(application: Application): ViewModel() {
     fun setDate(date: String,fag: String) {
         when (fag){
             "RD"->_dateOfReceiving.value = date
-            "DT"->_dateOfReceiving.value = date
+            "DT"->_dateOfTesting.value = date
             "DSVR"->_dateOfSVR.value = date
             "DISSUE"->_dateOfIssue.value = date
         }

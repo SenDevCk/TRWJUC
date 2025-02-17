@@ -45,7 +45,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@android:color/white"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="@android:color/background_light" />
 

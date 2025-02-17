@@ -1,5 +1,6 @@
 package com.bih.nic.bsphcl.trwjuc.data
 
+import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -8,11 +9,11 @@ import androidx.room.PrimaryKey
  *Created by Chandan Singh on 2/14/2025.
  */
 @Entity
-class JobwiseMaterialUtilizationSegment
-{
+data class JobwiseMaterialUtilizationSegment(
     @PrimaryKey
-    var id:Int?=null
-    var materialName:String?=null
-    var firstUnit:String?=null
-    var secondUnit:String?=null
-}
+    @NonNull
+    var id:Int,
+    var materialName:String,
+    var firstUnit:String,
+    var secondUnit:String?
+)

@@ -170,15 +170,17 @@
                         android:layout_gravity="center"
                         android:layout_weight=".8"
                         android:gravity="center"
-                        android:text="@{tab1ViewModel.yearOfManufacturing}"
+                        android:textColor="@android:color/black"
+                        android:text="@{String.valueOf(tab1ViewModel.selectedYear)}"
                         android:textStyle="bold" />
 
                     <ImageView
+                        android:id="@+id/cal_viw"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".2"
                         android:src="@android:drawable/ic_menu_my_calendar"
-                        android:onClick="onCalendarIconClick"/>
+                        />
                 </LinearLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"

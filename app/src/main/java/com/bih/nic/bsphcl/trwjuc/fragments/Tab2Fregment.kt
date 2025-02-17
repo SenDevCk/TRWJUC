@@ -47,39 +47,31 @@ class Tab2Fregment : Fragment(), Tab2Listner {
                it.lifecycleOwner = viewLifecycleOwner
                viewModel.tab2Listner = this
                // Return the root view of the binding
-               // Observe showDatePicker LiveData and show the DatePickerDialog
-               viewModel.showDatePicker.observe(viewLifecycleOwner, { show ->
-                   if (show) {
-                       // Show the DatePickerDialog when the event is triggered
-                       showDatePickerDialogRD("RD")
-                       // Reset the event so the dialog doesn't show again on configuration changes
-                       viewModel.resetDatePickerEvent("RD")
-                   }
-               })
-               viewModel.showDatePickerDT.observe(viewLifecycleOwner, { show ->
-                   if (show) {
-                       // Show the DatePickerDialog when the event is triggered
-                       showDatePickerDialogRD("DT")
-                       // Reset the event so the dialog doesn't show again on configuration changes
-                       viewModel.resetDatePickerEvent("DT")
-                   }
-               })
-               viewModel.showDatePickerSVR.observe(viewLifecycleOwner, { show ->
-                   if (show) {
-                       // Show the DatePickerDialog when the event is triggered
-                       showDatePickerDialogRD("DSVR")
-                       // Reset the event so the dialog doesn't show again on configuration changes
-                       viewModel.resetDatePickerEvent("DSVR")
-                   }
-               })
-               viewModel.showDatePickerIssue.observe(viewLifecycleOwner, { show ->
-                   if (show) {
-                       // Show the DatePickerDialog when the event is triggered
-                       showDatePickerDialogRD("DISSUE")
-                       // Reset the event so the dialog doesn't show again on configuration changes
-                       viewModel.resetDatePickerEvent("DISSUE")
-                   }
-               })
+               // Observe sho
+               // wDatePicker LiveData and show the DatePickerDialog
+               binding.clickDor.setOnClickListener {
+                   // Show the DatePickerDialog when the event is triggered
+                   showDatePickerDialogRD("RD")
+                   // Reset the event so the dialog doesn't show again on configuration changes
+                   viewModel.resetDatePickerEvent("RD")
+               }
+               binding.clickDot.setOnClickListener {
+                   // Show the DatePickerDialog when the event is triggered
+                   showDatePickerDialogRD("DT")
+                   // Reset the event so the dialog doesn't show again on configuration changes
+                   viewModel.resetDatePickerEvent("DT")
+               }
+               binding.clickSvr.setOnClickListener {
+                   showDatePickerDialogRD("DSVR")
+                   // Reset the event so the dialog doesn't show again on configuration changes
+                   viewModel.resetDatePickerEvent("DSVR")
+               }
+               binding.clickDoi.setOnClickListener {
+                   showDatePickerDialogRD("DISSUE")
+                   // Reset the event so the dialog doesn't show again on configuration changes
+                   viewModel.resetDatePickerEvent("DISSUE")
+               }
+
                return it.root
     }
            // Return null if binding is null (shouldn't happen)

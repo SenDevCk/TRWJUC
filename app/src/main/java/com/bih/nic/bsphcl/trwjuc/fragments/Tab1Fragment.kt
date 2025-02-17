@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -39,6 +40,9 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             container,
             false
         )
+        binding.calViw.setOnClickListener {
+            onCalendarIconClick()
+        }
         // Check if binding is not null before accessing it
         binding?.let {
             // Obtain ViewModel instance
@@ -170,10 +174,15 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
         binding?.optionCircle?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedSubdivision = parent.getItemAtPosition(position) as String
+                //val selectedSubdivision = parent.getItemAtPosition(position) as String
+                    val item = binding?.tab1ViewModel?.circles?.get(position)
+                if (item != null) {
+                    binding?.tab1ViewModel?.onCircleSelected(item.circleId)
+                }
+
                 // Handle the selected subdivision
-                binding?.tab1ViewModel?.onCircleSelected(selectedSubdivision)
-                Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
+
+                //Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -196,10 +205,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
         binding?.optionDivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedDivision = parent.getItemAtPosition(position) as String
+               // val selectedDivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                binding?.tab1ViewModel?.onDivisionSelect(selectedDivision)
-                Toast.makeText(requireContext(), "Selected: $selectedDivision", Toast.LENGTH_SHORT).show()
+                val item = binding?.tab1ViewModel?.divisions?.get(position)
+                if (item != null) {
+                    binding?.tab1ViewModel?.onDivisionSelect(item.divId)
+                }
+                //Toast.makeText(requireContext(), "Selected: $selectedDivision", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -222,10 +234,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
         binding?.optionSubdivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedSubdivision = parent.getItemAtPosition(position) as String
+                //val selectedSubdivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                binding?.tab1ViewModel?.onSubDivisionSelect(selectedSubdivision)
-                Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
+                val item = binding?.tab1ViewModel?.subdivisions?.get(position)
+                if (item != null) {
+                    binding?.tab1ViewModel?.onSubDivisionSelect(item.subDivId)
+                }
+                //Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -249,10 +264,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 
         binding?.optionSubdivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedsection = parent.getItemAtPosition(position) as String
+                //val selectedsection = parent.getItemAtPosition(position) as String
                 // Handle the selected section
-                binding?.tab1ViewModel?.onSectionSelect(selectedsection)
-                Toast.makeText(requireContext(), "Selected: $selectedsection", Toast.LENGTH_SHORT).show()
+                val item = binding?.tab1ViewModel?.sections?.get(position)
+//                if (item != null) {
+//                    binding?.tab1ViewModel?.onSubDivisionSelect(item.secId)
+//                }
+                //Toast.makeText(requireContext(), "Selected: $selectedsection", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -270,7 +288,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
         yearPickerDialog.show(requireActivity().supportFragmentManager, "Select Year of Manufacturing")
     }
-    fun onCalendarIconClick(view: View) {
+    fun onCalendarIconClick() {
         showYearPickerDialog()
     }
     override fun onSuccess() {
