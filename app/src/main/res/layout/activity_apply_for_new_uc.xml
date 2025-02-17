@@ -20,7 +20,7 @@
             app:title="Apply New"
             app:navigationIconTint="@color/design_default_color_primary_dark"
             app:titleTextColor="@color/design_default_color_primary_dark"
-           />
+            />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -45,7 +45,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@android:color/white"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="@android:color/background_light" />
 

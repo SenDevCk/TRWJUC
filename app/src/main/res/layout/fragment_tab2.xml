@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".fragments.Tab2Fregment">
     <data>
 
@@ -47,6 +45,7 @@
                         android:textStyle="bold" />
 
                     <ImageView
+                        android:id="@+id/click_dor"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".2"
@@ -113,6 +112,7 @@
                         android:textStyle="bold" />
 
                     <ImageView
+                        android:id="@+id/click_dot"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".2"
@@ -153,6 +153,7 @@
                         android:textStyle="bold" />
 
                     <ImageView
+                        android:id="@+id/click_svr"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".2"
@@ -195,6 +196,7 @@
                         android:textStyle="bold" />
 
                     <ImageView
+                        android:id="@+id/click_doi"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".2"

@@ -3,16 +3,23 @@ package com.bih.nic.bsphcl.trwjuc.fragments.tab1
 import android.app.Application
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.room.ColumnInfo
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
+import com.bih.nic.bsphcl.trwjuc.data.Circle
+import com.bih.nic.bsphcl.trwjuc.data.Division
+import com.bih.nic.bsphcl.trwjuc.data.Section
+import com.bih.nic.bsphcl.trwjuc.data.Subdivision
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class Tab1ViewModel(application: Application) : ViewModel() {
+class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     var tab1Listner:Tab1Listner?=null
     private val _selectedCircle = MutableLiveData<String>()
     val selectedCircle: LiveData<String> get() = _selectedCircle
@@ -53,7 +60,10 @@ class Tab1ViewModel(application: Application) : ViewModel() {
     //subdivisionlist
     private val _sectionList = MutableLiveData<List<String>>()
     val sectionList: LiveData<List<String>> get() = _sectionList
-
+    var circles:List<Circle>?=null
+    var divisions:List<Division>?=null
+    var subdivisions:List<Subdivision>?=null
+    var sections:List<Section>?=null
     init {
         // Example list of subdivision objects (replace with actual data)
         appDataBase= Room.databaseBuilder(
@@ -93,7 +103,7 @@ class Tab1ViewModel(application: Application) : ViewModel() {
 
 
     fun onNextButtonClicked(view :View){
-      Log.d("log","onNextButtonClicked Coming....")
+        Log.d("log","onNextButtonClicked Coming....")
         tab1Listner?.onSuccess()
 
     }
@@ -101,80 +111,108 @@ class Tab1ViewModel(application: Application) : ViewModel() {
     // Method to update the selected radio button (when user changes selection)
 
     private fun fetchCircles() {
-        viewModelScope.launch {
-            // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.circleDao()?.getAll() ?: emptyList()
-            _circleList.value = circles.map { it?.circleName.toString() } // Assuming `Circle` has a `name` property
-        }
-    }
-    private fun fetchDivisionsByCircle(mcircle:String) {
-        viewModelScope.launch {
-            // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.divisionDao()?.getAllDivisionFromCircle(mcircle) ?: emptyList()
-            _circleList.value = circles.map { it?.divName.toString() } // Assuming `Circle` has a `name` property
+        viewModelScope.launch(Dispatchers.IO) { // ✅ Run database call on background thread
+            circles = appDataBase?.circleDao()?.getAll() ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _circleList.value = circles?.map { it?.cirName.toString() } // ✅ Update UI on main thread
+            }
         }
     }
     private fun fetchDivisions() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.divisionDao()?.getAllDivision() ?: emptyList()
-            _circleList.value = circles.map { it?.divName.toString() } // Assuming `Circle` has a `name` property
+            divisions = appDataBase?.divisionDao()?.getAllDivision() ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _divisionList.value =
+                    divisions?.map { it?.divName.toString() } // Assuming `Circle` has a `name` property
+            }
+        }
+    }
+    private fun fetchDivisionsByCircle(mcircle:String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Launch a coroutine to fetch data asynchronously
+            divisions = appDataBase?.divisionDao()?.getAllDivisionFromCircle(mcircle) ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _divisionList.value = divisions?.map { it?.divName.toString() }
+            }// Assuming `Circle` has a `name` property
         }
     }
 
+
     private fun fetchSubDivisionsByDivision(division:String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.subDivisionDao()?.getSubdivisionByDivision(division) ?: emptyList()
-            _circleList.value = circles.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+            subdivisions = appDataBase?.subDivisionDao()?.getSubdivisionByDivision(division) ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _subdivisionList.value =
+                    subdivisions?.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 
     private fun fetchSubDivisionsByCircle(circle:String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO){
             // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.subDivisionDao()?.getSubdivisionByCircle(circle) ?: emptyList()
-            _circleList.value = circles.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+            subdivisions = appDataBase?.subDivisionDao()?.getSubdivisionByCircle(circle) ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _subdivisionList.value =
+                    subdivisions?.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 
     private fun fetchSubDivisions() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO){
             // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.subDivisionDao()?.getAllSubDivision() ?: emptyList()
-            _circleList.value = circles.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+            subdivisions = appDataBase?.subDivisionDao()?.getAllSubDivision() ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _subdivisionList.value =
+                    subdivisions?.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 
     private fun fetchSections() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val sections = appDataBase?.sectionDao()?.getAllSection() ?: emptyList()
-            _sectionList.value = sections.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            sections = appDataBase?.sectionDao()?.getAllSection() ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _sectionList.value =
+                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 
     private fun fetchSectionsByCircle(circle : String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val sections = appDataBase?.sectionDao()?.getAllSectionByCircle(circle) ?: emptyList()
-            _sectionList.value = sections.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            sections = appDataBase?.sectionDao()?.getAllSectionByCircle(circle) ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _sectionList.value =
+                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 
     private fun fetchSectionsByDivision(division : String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val sections = appDataBase?.sectionDao()?.getAllSectionByDivision(division) ?: emptyList()
-            _sectionList.value = sections.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            sections = appDataBase?.sectionDao()?.getAllSectionByDivision(division) ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _sectionList.value =
+                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 
     private fun fetchSectionsBySubDivision(subdiv : String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val sections = appDataBase?.sectionDao()?.getAllSectionBySubdiv(subdiv) ?: emptyList()
-            _sectionList.value = sections.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            sections = appDataBase?.sectionDao()?.getAllSectionBySubdiv(subdiv) ?: emptyList()
+            withContext(Dispatchers.Main) {
+                _sectionList.value =
+                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+            }
         }
     }
 

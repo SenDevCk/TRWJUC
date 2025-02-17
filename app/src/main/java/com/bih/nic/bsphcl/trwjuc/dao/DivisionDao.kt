@@ -3,6 +3,7 @@ package com.bih.nic.bsphcl.trwjuc.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.bih.nic.bsphcl.trwjuc.data.Circle
 import com.bih.nic.bsphcl.trwjuc.data.Division
@@ -21,8 +22,8 @@ interface DivisionDao {
     @Query("SELECT * FROM Division where circleId=(:circleId)")
     fun getAllDivisionFromCircle(circleId: String): List<Division>
 
-    @Insert
-    fun insertAll(vararg divisions: Division)
+    @Insert(onConflict = OnConflictStrategy.REPLACE) // ✅ Replaces existing entries if there's a conflict
+    suspend fun insertAll(vararg divisions: Division)
 
     @Delete
     fun delete(division: Division)
