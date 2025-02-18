@@ -12,10 +12,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.bih.nic.bsphcl.trwjuc.data.Circle
 import com.bih.nic.bsphcl.trwjuc.data.Division
+import com.bih.nic.bsphcl.trwjuc.data.FormState
+import com.bih.nic.bsphcl.trwjuc.data.JointInspectionReport
 import com.bih.nic.bsphcl.trwjuc.data.Section
 import com.bih.nic.bsphcl.trwjuc.data.Subdivision
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -31,20 +34,30 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     private val _selectedSection = MutableLiveData<String>()
     val selectedSection: LiveData<String> get() = _selectedSection
     val place: String? = null
+    val trwUniqueCode: String? = null
     val dob: String? = null
     val capacity: String? = null
     val yearOfManufacturing: String? = null
     val make: String? = null
     val oilCapacity: String? = null
     val oilFound: String? = null
-    var appDataBase : AppDatabase?=null
+    private val appDataBase = AppDatabase.getDatabase(application)
+
     // LiveData to store the selected option (OK or NOT) dtrBodyFound
     private val _dtrBodySelection = MutableLiveData<String>()
     val dtrBodySelection: LiveData<String> get() = _dtrBodySelection
-    val htStud: String? = null
-    val ltStud: String? = null
-    val htBushing: String? = null
-    val ltBushing: String? = null
+
+    private val _htStudSelection = MutableLiveData<String>()
+    val htStudSelection: LiveData<String> get() = _htStudSelection
+
+    private val _ltStudSelection = MutableLiveData<String>()
+    val ltStudSelection: LiveData<String> get() = _ltStudSelection
+    private val _htBushingSelection = MutableLiveData<String>()
+    val htBushingSelection: LiveData<String> get() = _htBushingSelection
+
+    private val _ltBushingSelection = MutableLiveData<String>()
+    val ltBushingSelection: LiveData<String> get() = _ltBushingSelection
+
     val remarks: String? = null
     private val _selectedYear = MutableLiveData<Int>()
     val selectedYear: LiveData<Int> get() = _selectedYear
@@ -64,49 +77,23 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     var divisions:List<Division>?=null
     var subdivisions:List<Subdivision>?=null
     var sections:List<Section>?=null
+    private val _formState = MutableLiveData<FormState>()
+    val formState: LiveData<FormState> get() = _formState
+
+
+
     init {
         // Example list of subdivision objects (replace with actual data)
-        appDataBase= Room.databaseBuilder(
-            application,
-            AppDatabase::class.java, "trw_db"
-        ).build()
         fetchCircles()
         fetchDivisions()
         fetchSubDivisions()
         fetchSections()
-//        _circleList.value = listOf(
-//            "Select Circle",
-//            "Circle 1",
-//            "Circle 2",
-//           "Circle 3"
-//        )
-//        _divisionList.value = listOf(
-//            "Select Division",
-//            "Division 1",
-//            "Division 2",
-//            "Division 3"
-//        )
-//        _subdivisionList.value = listOf(
-//            "Select Subdivision",
-//            "Subdivision 1",
-//            "Subdivision 2",
-//            "Subdivision 3"
-//        )
-//        _sectionList.value = listOf(
-//            "Select Section",
-//            "Section 1",
-//            "Section 2",
-//            "Section 3"
-//        )
-    }
-
-
-
-    fun onNextButtonClicked(view :View){
-        Log.d("log","onNextButtonClicked Coming....")
-        tab1Listner?.onSuccess()
 
     }
+
+
+
+
 
     // Method to update the selected radio button (when user changes selection)
 
@@ -244,9 +231,122 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setSelectedHTSTUD(option: String) {
-        _dtrBodySelection.value = option
+        _htStudSelection.value = option
     }
+
+    fun setSelectedLTSTUD(option: String) {
+        _ltStudSelection.value = option
+    }
+
+    fun setSelectedLTBussing(option: String) {
+        _ltBushingSelection.value = option
+    }
+
+    fun setSelectedHTBussing(option: String) {
+        _htBushingSelection.value = option
+    }
+
     fun setSelectedYear(year: Int) {
         _selectedYear.value = year
     }
+    fun onNextButtonClicked(view :View){
+        Log.d("log","onNextButtonClicked Coming....")
+        validateForm()
+        if (_formState.value?.isValid == true){
+            val dataToSave=JointInspectionReport(
+                trwUniqueCode?.takeIf { it.isNotBlank() } ?: "",
+                _selectedCircle.value,
+                selectedDivision.value,
+                _selectedSubDicision.value,
+                _selectedSection.value,
+                place,
+                dob,
+                capacity,
+                selectedYear.value.toString(),
+                make,
+                oilCapacity,
+                oilFound,
+                _dtrBodySelection.value,
+                _htStudSelection.value,
+                _ltStudSelection.value,
+                _htBushingSelection.value,
+                _ltBushingSelection.value,
+                remarks
+            );
+            viewModelScope.launch {
+                try {
+                    withContext(Dispatchers.IO) {
+                        appDataBase?.jointInspectionReportDao()?.insert(dataToSave)
+                    }
+                    Log.d("log", "Report inserted successfully")
+                } catch (e: Exception) {
+                    Log.e("onSuccess", "Error inserting report: ${e.message}")
+                    // Optionally show a toast or other error handling UI
+                }
+            }
+            tab1Listner?.onSuccess()
+        }else{
+            _formState.value?.errorMessage?.let { tab1Listner?.onFailure(it) }
+        }
+    }
+    fun validateForm() {
+        when {
+            trwUniqueCode.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter TRW Unique Code")
+            }
+            _selectedCircle.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Circle Should be Selected")
+            }
+            _selectedDicision.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Division Should be Selected")
+            }
+            _selectedSubDicision.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "SubDivision Should be Selected")
+            }
+            _selectedSection.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Section email format")
+            }
+            place.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter Place")
+            }
+            capacity.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter Capacity")
+            }
+            yearOfManufacturing.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Select Manufacturing year")
+            }
+            yearOfManufacturing.length != 4 -> {
+                _formState.value = FormState(errorMessage = "Year of Manufacturing must be 4 digits long")
+            }
+            make.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter Make")
+            }
+            oilCapacity.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter Oil Capacity")
+            }
+            oilFound.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter Oil Found")
+            }
+            _dtrBodySelection.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Select DTR Body Found")
+            }
+            _htStudSelection.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter HT Stud")
+            }
+            _ltStudSelection.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter LT Stud")
+            }
+            _htBushingSelection.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter HT Bussing")
+            }
+            _ltBushingSelection.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter LT Bussing")
+            }
+            else -> {
+                _formState.value = FormState(isValid = true)
+            }
+        }
+    }
+
+
 }

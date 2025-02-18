@@ -20,18 +20,33 @@ import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab2Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
 import com.bih.nic.bsphcl.trwjuc.fragments.tab2.Tab2ViewModel
+import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import com.bih.nic.bsphcl.trwjuc.utils.YearPickerDialog
 import java.util.Calendar
+import androidx.activity.viewModels
+import androidx.room.Room
+import com.bih.nic.bsphcl.trwjuc.data.JointInspectionReport
+import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class Tab1Fragment : Fragment(), Tab1Listner {
     private lateinit var binding: FragmentTab1Binding
     private lateinit var viewModel: Tab1ViewModel
     var viewPager:ViewPager2?=null
+
+    var appDataBase : AppDatabase?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        appDataBase= Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java, "trw_db"
+        ).build()
         viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
         // Inflate the layout for this fragment using DataBinding
         binding = DataBindingUtil.inflate(
@@ -64,17 +79,16 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             ltStud(viewModel,binding)
             htbussiing(viewModel,binding)
             ltbussiing(viewModel,binding)
-            // Observe the LiveData for credential validation
-//            viewModel.isValidCredential.observe(viewLifecycleOwner, Observer { isValid ->
-//                if (isValid) {
-//                    // Handle valid credentials (e.g., navigate to another fragment)
-//                    // Use NavController to navigate if needed
-//                    findNavController().navigate(R.id.action_tab1Fragment_to_nextFragment)
-//                } else {
-//                    // Handle invalid credentials (e.g., show an error message)
-//                    Toast.makeText(requireContext(), "Invalid credentials", Toast.LENGTH_SHORT).show()
-//                }
-//            })
+            // Observe the form state from ViewModel
+            viewModel.formState.observe(requireActivity(), Observer { formState ->
+                formState.errorMessage?.let {
+                    // Show the error message
+                    Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
+                }
+
+                // Enable or disable the submit button based on form validity
+                //binding?.buttonTab1?.isEnabled = formState.isValid
+            })
 
             // Return the root view of the binding
             return it.root
@@ -115,13 +129,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         binding?.radioGroupLtstud?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_ltstud_ok->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                    binding?.tab1ViewModel?.setSelectedLTSTUD("OK")
                 }
                 R.id.radio_group_ltstud_def->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                    binding?.tab1ViewModel?.setSelectedLTSTUD("NOT")
                 }
                 R.id.radio_group_ltstud_miss->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                    binding?.tab1ViewModel?.setSelectedLTSTUD("MISSING")
                 }
             }
         }
@@ -131,13 +145,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         binding?.radioGroupHtbuss?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_htbuss_ok->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                    binding?.tab1ViewModel?.setSelectedHTBussing("OK")
                 }
                 R.id.radio_group_htbuss_def->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                    binding?.tab1ViewModel?.setSelectedHTBussing("NOT")
                 }
                 R.id.radio_group_htbuss_miss->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                    binding?.tab1ViewModel?.setSelectedHTBussing("MISSING")
                 }
             }
         }
@@ -147,13 +161,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         binding?.radioGroupLtbuss?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_ltbuss_ok->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
+                    binding?.tab1ViewModel?.setSelectedLTBussing("OK")
                 }
                 R.id.radio_group_ltbuss_def->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                    binding?.tab1ViewModel?.setSelectedLTBussing("NOT")
                 }
                 R.id.radio_group_ltbuss_miss->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
+                    binding?.tab1ViewModel?.setSelectedLTBussing("MISSING")
                 }
             }
         }
@@ -293,11 +307,15 @@ class Tab1Fragment : Fragment(), Tab1Listner {
     }
     override fun onSuccess() {
         Log.d("log","hi onSuccess")
-        //requireContext().toast("hi onSuccess");
+        // Insert the data in the background to prevent blocking the UI
+
         viewPager?.currentItem = 1
+        //sharedViewModel?.updateData("Data from Tab 1")
     }
 
-    override fun onFailure() {
-        //TODO("Not yet implemented")
+    override fun onFailure(value: String) {
+      Log.d("error msg",value)
     }
+
+
 }

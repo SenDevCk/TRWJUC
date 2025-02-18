@@ -43,6 +43,20 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter TRW CODE"
+                        android:imeOptions="actionNext"
+                        android:textStyle="bold"
+                        android:text="@{tab1ViewModel.trwUniqueCode}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/buttonshape">
 
@@ -52,8 +66,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:dropDownWidth="match_parent"
-                        android:imeOptions="actionNext"
-                        android:entries="@{tab1ViewModel.circleList}" />
+                        android:entries="@{tab1ViewModel.circleList}"
+                        android:imeOptions="actionNext" />
                     <!--android:onItemSelected="@{tab1ViewModel.onItemSelect}"-->
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,8 +83,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:dropDownWidth="match_parent"
-                        android:imeOptions="actionNext"
-                        android:entries="@{tab1ViewModel.divisionList}" />
+                        android:entries="@{tab1ViewModel.divisionList}"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -85,8 +99,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:dropDownWidth="match_parent"
-                        android:imeOptions="actionNext"
-                        android:entries="@{tab1ViewModel.subdivisionList}" />
+                        android:entries="@{tab1ViewModel.subdivisionList}"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -101,8 +115,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:dropDownWidth="match_parent"
-                        android:imeOptions="actionNext"
-                        android:entries="@{tab1ViewModel.sectionList}" />
+                        android:entries="@{tab1ViewModel.sectionList}"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -113,17 +127,17 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Place"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.place}"
-                        android:hint="Place" />
+                        android:text="@{tab1ViewModel.place}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
                     android:hint="Date of birth"
-                    android:text="@{tab1ViewModel.dob}"/>
+                    android:padding="10dp"
+                    android:text="@{tab1ViewModel.dob}" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -146,9 +160,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Capacity"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.capacity}"
-                        android:hint="Capacity" />
+                        android:text="@{tab1ViewModel.capacity}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -170,8 +184,8 @@
                         android:layout_gravity="center"
                         android:layout_weight=".8"
                         android:gravity="center"
-                        android:textColor="@android:color/black"
                         android:text="@{String.valueOf(tab1ViewModel.selectedYear)}"
+                        android:textColor="@android:color/black"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -179,9 +193,9 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".2"
-                        android:src="@android:drawable/ic_menu_my_calendar"
-                        />
+                        android:src="@android:drawable/ic_menu_my_calendar" />
                 </LinearLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -189,9 +203,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Make"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.make}"
-                        android:hint="Make" />
+                        android:text="@{tab1ViewModel.make}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -201,9 +215,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Oil Capacity( in Ltr.)"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.oilCapacity}"
-                        android:hint="Oil Capacity( in Ltr.)" />
+                        android:text="@{tab1ViewModel.oilCapacity}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -213,9 +227,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Oil Found (in Ltr.)"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.oilFound}"
-                        android:hint="Oil Found (in Ltr.)" />
+                        android:text="@{tab1ViewModel.oilFound}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -228,24 +242,21 @@
                     android:id="@+id/radio_group_dtr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/radio_group_dtr_ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OK"
-                        android:value="OK"
-                        />
+                        android:value="OK" />
 
                     <RadioButton
                         android:id="@+id/radio_group_dtr_notok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="NOT"
-                        android:value="NOT"
-                        />
+                        android:value="NOT" />
                 </RadioGroup>
 
                 <TextView
@@ -379,20 +390,21 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
                         android:hint="Remarks.."
-                        android:text="@{tab1ViewModel.remarks}"
-                        android:maxLines="3" />
+                        android:imeOptions="actionDone"
+                        android:maxLines="3"
+                        android:text="@{tab1ViewModel.remarks}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_tab1"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/white"
                     android:backgroundTint="@color/design_default_color_primary_dark"
                     android:onClick="@{tab1ViewModel::onNextButtonClicked}"
-                    android:text="Next->" />
+                    android:text="Next->"
+                    android:textColor="@color/white" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>

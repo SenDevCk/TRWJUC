@@ -10,11 +10,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.isGone
-import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
 import com.bih.nic.bsphcl.trwjuc.R
-import com.bih.nic.bsphcl.trwjuc.data.JobwiseMaterialUtilizationSegment
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import com.bih.nic.bsphcl.trwjuc.retrofit.DataApi
 import com.bih.nic.bsphcl.trwjuc.retrofit.RetrofitHelper
@@ -27,72 +24,58 @@ import kotlinx.coroutines.withContext
 class SplashActivity : AppCompatActivity() {
 
     var progressBar: ProgressBar?=null
-    var appDataBase : AppDatabase?=null
+    private val appDataBase = AppDatabase.getDatabase(application)
     var progressMessage : TextView?=null
     var sessionData: CommanPref?=null
     val handler = Handler(Looper.getMainLooper())
     override fun onStart() {
         super.onStart()
-        sessionData = CommanPref.getInstance(applicationContext) // ✅ Get the instance
-        sessionData!!.saveData("appdata", "N") // ✅ No need for `?.` since it's non-null
-        appDataBase= Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "trw_db"
-        ).build()
+        sessionData = CommanPref.getInstance(applicationContext)
+        sessionData?.saveData("appdata", "N")
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         this.progressBar =findViewById<ProgressBar>(R.id.progress_bar)
         this.progressMessage = findViewById<TextView>(R.id.progress_message)
-        var appData = sessionData?.getData("appdata")?.trim() // ✅ Trim directly after fetching
-
-        if (appData.equals("N", ignoreCase = true)) { // ✅ Case-insensitive comparison
-            getCircle()
-            getDivision()
-            getSubDivision()
-            getSection()
-            getJobWiseMatUtilizationSeg()
+        val appData = sessionData?.getData("appdata")?.trim()
+        if (appData.equals("N", ignoreCase = true)) {
+            loadData()
         } else {
             start()
         }
 
     }
 
-    fun getCircle() {
+    private fun loadData() {
+        getCircle()
+        getDivision()
+        getSubDivision()
+        getSection()
+        getJobWiseMatUtilizationSeg()
+    }
+
+    private fun getCircle() {
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
-
-        // ✅ Use lifecycleScope or viewModelScope instead of GlobalScope
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
-                withContext(Dispatchers.Main) {
-                    progressBar?.visibility = View.VISIBLE
-                    progressMessage?.text = "Loading Circle...."
-                }
-
+                withContext(Dispatchers.Main) { showProgressBar("Loading Circle....") }
                 val result = dataApi.getCircle()
 
                 if (result.isSuccessful) {
                     result.body()?.let { circleList ->
-                        // Log.d("chandan:", circleList.toString())
                         val countCir = appDataBase?.circleDao()?.countCircle() ?: 0
-                        if (countCir<=0) {
-                            // ✅ Insert data into the database on IO thread
+                        if (countCir <= 0) {
                             appDataBase?.circleDao()?.insertAll(*circleList.toTypedArray())
                         }
-                        // ✅ Call `getDivision()` on IO thread (if it does not update UI)
-                    } ?: run {
-                        Log.d("chandan:", "No data available")
                     }
                 } else {
                     Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                Log.e("chandan:", "Error during API call: ${e.message}")
+                Log.e("chandan:", "Error: ${e.message}")
             } finally {
-                withContext(Dispatchers.Main) {
-                    progressBar?.visibility = View.GONE
-                }
+                withContext(Dispatchers.Main) { hideProgressBar() }
             }
         }
     }
@@ -101,7 +84,7 @@ class SplashActivity : AppCompatActivity() {
     fun getDivision() {
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // ✅ UI updates on the main thread
                 withContext(Dispatchers.Main) {
@@ -145,7 +128,7 @@ class SplashActivity : AppCompatActivity() {
         progressMessage?.text="Loading Subdivision...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
         // Launching the coroutine using ViewModelScope (instead of GlobalScope)
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 progressBar?.visibility = View.GONE
                 val result = dataApi.getSubdivision()
@@ -183,7 +166,7 @@ class SplashActivity : AppCompatActivity() {
         progressMessage?.text="Loading Section...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
         // Launching the coroutine using ViewModelScope (instead of GlobalScope)
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 progressBar?.visibility = View.GONE
                 val result = dataApi.getSection()
@@ -220,7 +203,7 @@ class SplashActivity : AppCompatActivity() {
         progressMessage?.text="Loading JObs...."
         val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
         // Launching the coroutine using ViewModelScope (instead of GlobalScope)
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 progressBar?.visibility = View.GONE
                 val result = dataApi.getJobwiseMatUtilizationSeg()
@@ -234,7 +217,7 @@ class SplashActivity : AppCompatActivity() {
                         jwmuDao?.insertAll(*jobUtilList.toTypedArray())
                         // Log the result
                         progressMessage?.text="Done.."
-                        sessionData?.saveData("appdata","Y")
+                        sessionData?.saveData("appdata", "Y")
                         start()
                     } ?: run {
                         // Handle case when the body is null
@@ -253,19 +236,24 @@ class SplashActivity : AppCompatActivity() {
             }
         }
     }
+    private fun showProgressBar(message: String) {
+        progressBar?.visibility = View.VISIBLE
+        progressMessage?.text = message
+    }
 
-    fun start(){
-        // Post a task with a delay of 2 seconds (2000ms)
-        progressMessage?.text="Wait.."
+    private fun hideProgressBar() {
+        progressBar?.visibility = View.GONE
+    }
+    fun start() {
+        progressMessage?.text = "Wait.."
         handler.postDelayed({
-            // Code to execute after the delay
-            var appData1=  sessionData?.getData("appdata")
-            if (appData1.equals("Y", ignoreCase = true)){
+            val appData = sessionData?.getData("appdata")?.trim()
+            if (appData.equals("Y", ignoreCase = true)) {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_HISTORY
-                this.startActivity(intent)
-            }else{
-                toast("Data Not Found !")
+                startActivity(intent)
+            } else {
+                toast("Data Not Found!")
                 finish()
             }
         }, 5000)
