@@ -6,5 +6,5 @@ package com.bih.nic.bsphcl.trwjuc.fragments.tab2
  */
 interface Tab2Listner {
     fun onSuccess()
-    fun onFailure()
+    fun onFailure(message:String)
 }

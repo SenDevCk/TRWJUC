@@ -16,35 +16,35 @@ data class MasterRegisterDetails(
     val uId: String, // ✅ Ensure it's non-nullable
 
     @ColumnInfo(name = "date_of_receiving")
-    var dateOfReceiving: String,
+    var dateOfReceiving: String?,
 
     @ColumnInfo(name = "place")
-    var place: String,
+    var place: String?,
 
     @ColumnInfo(name = "capacity")
-    var capacity: String,
+    var capacity: String?,
 
     @ColumnInfo(name = "date_of_testing")
-    var dateOfTesting: String,
+    var dateOfTesting: String?,
 
     @ColumnInfo(name = "svr_no")
-    var svrNo: String,
+    var svrNo: String?,
 
     @ColumnInfo(name = "date_of_svr")
-    var dateOfSvr: String,
+    var dateOfSvr: String?,
 
     @ColumnInfo(name = "date_of_issue")
-    var dateOfIssue: String,
+    var dateOfIssue: String?,
 
     @ColumnInfo(name = "gate_pass_no")
-    var gatePassNo: Int,
+    var gatePassNo: String?,
 
     @ColumnInfo(name = "siv_cdt_no")
-    var sivCdtNo: String,
+    var sivCdtNo: String?,
 
     @ColumnInfo(name = "issued_to")
-    var issuedTo: String,
+    var issuedTo: String?,
 
     @ColumnInfo(name = "remarks")
-    var remarks: String
+    var remarks: String?
 )

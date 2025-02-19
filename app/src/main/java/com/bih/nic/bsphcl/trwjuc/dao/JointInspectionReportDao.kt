@@ -17,8 +17,8 @@ interface JointInspectionReportDao {
     @Query("SELECT * FROM JointInspectionReport")
     fun getAll(): List<JointInspectionReport>
 
-    @Query("SELECT * FROM JointInspectionReport WHERE uid IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<JointInspectionReport>
+    @Query("SELECT * FROM JointInspectionReport WHERE uid IN (:trwids)")
+    fun loadAllByIds(trwids: IntArray): List<JointInspectionReport>
 
 //    @Query("SELECT * FROM MasterRegisterDetails WHERE first_name LIKE :first AND " +
 //            "last_name LIKE :last LIMIT 1")

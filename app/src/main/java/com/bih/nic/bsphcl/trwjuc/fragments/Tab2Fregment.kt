@@ -2,11 +2,15 @@ package com.bih.nic.bsphcl.trwjuc.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
@@ -15,6 +19,7 @@ import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab2Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
 import com.bih.nic.bsphcl.trwjuc.fragments.tab2.Tab2Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab2.Tab2ViewModel
+import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import java.util.Calendar
 
 
@@ -22,10 +27,12 @@ class Tab2Fregment : Fragment(), Tab2Listner {
     private lateinit var binding: FragmentTab2Binding
     private lateinit var viewModel: Tab2ViewModel
     var viewPager: ViewPager2?=null
+    private lateinit var sharedViewModel: SharedViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment using DataBinding
         viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
@@ -35,6 +42,10 @@ class Tab2Fregment : Fragment(), Tab2Listner {
             container,
             false
         )
+        // Observe the shared data
+        sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+            binding.trwSerialNo.text = Editable.Factory.getInstance().newEditable(data)
+        })
         // Check if binding is not null before accessing it
         binding?.let {
             // Obtain ViewModel instance
@@ -97,11 +108,14 @@ class Tab2Fregment : Fragment(), Tab2Listner {
         datePickerDialog.show()
     }
     override fun onSuccess() {
-        viewPager?.currentItem = 2
+
+        Toast.makeText(requireContext(), "Data saved", Toast.LENGTH_SHORT).show()
+        requireActivity().finish()
+        //viewPager?.currentItem = 2
     }
 
-    override fun onFailure() {
-
+    override fun onFailure(error :String) {
+       Log.d("error",error)
     }
 
 }

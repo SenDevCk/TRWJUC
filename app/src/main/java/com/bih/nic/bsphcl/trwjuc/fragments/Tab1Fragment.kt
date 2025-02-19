@@ -39,6 +39,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
     var viewPager:ViewPager2?=null
 
     var appDataBase : AppDatabase?=null
+    private lateinit var sharedViewModel: SharedViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +48,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             requireContext(),
             AppDatabase::class.java, "trw_db"
         ).build()
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
         // Inflate the layout for this fragment using DataBinding
         binding = DataBindingUtil.inflate(
@@ -308,7 +310,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
     override fun onSuccess() {
         Log.d("log","hi onSuccess")
         // Insert the data in the background to prevent blocking the UI
-
+        viewModel.trwUniqueCode?.let { sharedViewModel.updateData(it) }
         viewPager?.currentItem = 1
         //sharedViewModel?.updateData("Data from Tab 1")
     }

@@ -29,27 +29,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//       val binding:ActivityMainBinding=DataBindingUtil.setContentView(this,R.layout.activity_main)
-//        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-//
-//        // Set the ViewModel in the binding (optional, depending on if you are using data binding for ViewModel)
-//        binding.mainViewHolder = viewModel
-//        binding.lifecycleOwner = this
-//        // Set AuthListener for ViewModel
-//        viewModel.mainClickHandler = this
-//        toolbar=findViewById<Toolbar>(R.id.toolbar_sel_main)
-//        toolbar.title=""
-
-
-
-   // }
-
-//    override fun applyNewClick() {
-////        TODO("Not yet implemented")
-//        val intent = Intent(this, ApplyForNewUC::class.java)
-//        this.startActivity(intent)
-//    }
-
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
