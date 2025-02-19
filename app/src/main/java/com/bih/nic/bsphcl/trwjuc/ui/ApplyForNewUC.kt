@@ -57,6 +57,7 @@ class ApplyForNewUC : AppCompatActivity() {
         sharedViewModel.data.observe(this, Observer { data ->
             // Update UI with shared data
             trwId= data
+            toolbar.subtitle=trwId
         })
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
