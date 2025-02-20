@@ -4,4 +4,34 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open_nav">OPEN</string>
     <string name="close_nav">close</string>
+    <string-array name="trw_stations">
+        <item>--select TRW--</item>
+        <item>Patna</item>
+        <item>Phulwarisharif</item>
+        <item>Harnaut</item>
+        <item>Gaya</item>
+        <item>Barun</item>
+        <item>Buxar</item>
+        <item>Bhabhua</item>
+        <item>Munger</item>
+        <item>Bhagalpur</item>
+        <item>Banka</item>
+        <item>Jamui</item>
+    </string-array>
+    <string-array name="dtr_capacity">
+        <item>select Capacity</item>
+        <item>16KVA</item>
+        <item>25KVA</item>
+        <item>63KVA</item>
+        <item>100KVA</item>
+        <item>200KVA</item>
+        <item>315KVA</item>
+        <item>500KVA</item>
+    </string-array>
+    <string-array name="dep_scheme">
+        <item>--select Dpt. Scheme--</item>
+        <item>Deparmental</item>
+        <item>OYT</item>
+        <item>Deposit Head</item>
+    </string-array>
 </resources>

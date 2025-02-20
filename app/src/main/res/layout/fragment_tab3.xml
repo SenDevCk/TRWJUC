@@ -44,7 +44,7 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
                     <EditText
-                        android:id="@+id/edit1"
+                        android:id="@+id/edit_size"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".5"
@@ -52,9 +52,10 @@
                         android:paddingLeft="10dp"
                         android:gravity="center"
                         android:background="@drawable/buttonshape"
-                        android:hint="Size"/>
+                        android:text="@{tab3ViewModel.size}"
+                        android:hint="Enter Size"/>
                     <EditText
-                        android:id="@+id/edit2"
+                        android:id="@+id/edit_weight"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight=".5"
@@ -63,22 +64,24 @@
                         android:background="@drawable/buttonshape"
                         android:layout_marginLeft="5dp"
                         android:gravity="center"
-                        android:hint="kg"/>
+                        android:text="@{tab3ViewModel.weight}"
+                        android:hint="Enter weight in kg"/>
                 </LinearLayout>
                 <Button
                     android:id="@+id/btn_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_entry"
                     android:layout_marginTop="10dp"
+                    android:onClick="@{tab3ViewModel::saveData}"
                     android:text="SAVE"
-                    android:layout_below="@+id/ll_entry"/>
-                <!--<androidx.recyclerview.widget.RecyclerView
+                    />
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/btn_save"
                     android:layout_marginTop="10dp"/>
-                    android:layout_above="@+id/recycler_view"-->
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

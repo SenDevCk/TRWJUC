@@ -1,12 +1,15 @@
 package com.bih.nic.bsphcl.trwjuc.fragments.tab3
 
 import android.app.Application
+import android.util.Log
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
+import com.bih.nic.bsphcl.trwjuc.data.JobwiseMaterialUtilizationSegment
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,9 +26,14 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
     // List of materials (options for the AutoCompleteTextView)
     private val _materialList = MutableLiveData<List<String>>()
     val materialList: LiveData<List<String>> get() = _materialList
-
+    val _materialSelected = MutableLiveData<Int>()
+    val materialSelected: LiveData<Int> get() = _materialSelected
     // Selected material (this will be bound to the AutoCompleteTextView)
     val selectedMaterial: MutableLiveData<String> = MutableLiveData()
+    var size:String?=null
+    var weight:String?=null
+    var materials : List<JobwiseMaterialUtilizationSegment>?=null
+    var trwNo:String?=null
     init {
         // Example list of subdivision objects (replace with actual data)
         appDataBase= Room.databaseBuilder(
@@ -38,16 +46,21 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
     private fun populateMaterialList() {
         viewModelScope.launch(Dispatchers.IO) {
             // Launch a coroutine to fetch data asynchronously
-            val circles = appDataBase?.jobwiseMatUtilDao()?.getAllMatSeg() ?: emptyList()
+            materials = appDataBase?.jobwiseMatUtilDao()?.getAllMatSeg() ?: emptyList()
             withContext(Dispatchers.Main) {
                 _materialList.value =
-                    circles.map { it?.materialName.toString() } // Assuming `Circle` has a `name` property
+                    materials?.map { it?.materialName.toString() } // Assuming `Circle` has a `name` property
             }
         }
     }
 
     fun onMaterialSelected(material: String) {
-        selectedMaterial.value = material
+        val material = materials?.find { it.materialName == material }
+        _materialSelected.value=material?.id
+    }
+
+    fun saveData(view :View){
+        Log.d("saveData","saveDataClicked")
     }
 
 }

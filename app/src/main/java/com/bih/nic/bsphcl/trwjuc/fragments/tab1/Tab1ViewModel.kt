@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.StringBuilder
 
 class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     var tab1Listner:Tab1Listner?=null
@@ -33,10 +34,16 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _selectedSection = MutableLiveData<String>()
     val selectedSection: LiveData<String> get() = _selectedSection
-    val place: String? = null
-    val trwUniqueCode: String? = null
+
+     val _selectedPlace = MutableLiveData<String>()
+    val selectedPlace: LiveData<String> get() = _selectedPlace
+    val _selectedCapacity = MutableLiveData<String>()
+    val selectedCapacity: LiveData<String> get() = _selectedCapacity
+    val _selectedScheme = MutableLiveData<String>()
+    val selectedScheme: LiveData<String> get() = _selectedScheme
+    var trwUniqueCode: String? = null
+    val trwSerialNo: String? = null
     val dob: String? = null
-    val capacity: String? = null
     val yearOfManufacturing: String? = null
     val make: String? = null
     val oilCapacity: String? = null
@@ -259,9 +266,9 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
                 selectedDivision.value,
                 _selectedSubDicision.value,
                 _selectedSection.value,
-                place,
+                selectedPlace.value,
                 dob,
-                capacity,
+                selectedCapacity.value,
                 selectedYear.value.toString(),
                 make,
                 oilCapacity,
@@ -291,7 +298,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun validateForm() {
         when {
-            trwUniqueCode.isNullOrBlank() -> {
+            trwSerialNo.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter TRW Unique Code")
             }
             _selectedCircle.value.isNullOrBlank() -> {
@@ -306,11 +313,14 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             _selectedSection.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Section email format")
             }
-            place.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Enter Place")
+            _selectedPlace.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Select Trw Place")
             }
-            capacity.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Enter Capacity")
+            _selectedCapacity.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Select Capacity")
+            }
+            _selectedScheme.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Select Scheme")
             }
             yearOfManufacturing.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select Manufacturing year")
@@ -343,6 +353,13 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
                 _formState.value = FormState(errorMessage = "Enter LT Bussing")
             }
             else -> {
+                val selctedYearData=String.format("%d",_selectedYear.value);
+                trwUniqueCode=StringBuilder().append(if (selectedPlace.value?.length == 1) "0${selectedPlace.value}" else selectedPlace.value)
+                    .append(trwSerialNo)
+                    .append(_selectedCapacity.value)
+                    .append(_selectedScheme.value)
+                    .append(selctedYearData?.substring(selctedYearData.length - 2))
+                    .toString()
                 _formState.value = FormState(isValid = true)
             }
         }

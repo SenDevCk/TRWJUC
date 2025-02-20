@@ -1,6 +1,7 @@
 package com.bih.nic.bsphcl.trwjuc.fragments
 
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.bih.nic.bsphcl.trwjuc.R
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab3Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab3.Tab3Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab3.Tab3ViewModel
+import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 
 
 class Tab3Fregment : Fragment(),Tab3Listner {
@@ -23,6 +25,7 @@ class Tab3Fregment : Fragment(),Tab3Listner {
     private lateinit var viewModel: Tab3ViewModel
     var viewPager: ViewPager2?=null
     //var recycler_view : RecyclerView ?=null
+    private lateinit var sharedViewModel: SharedViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,6 +38,9 @@ class Tab3Fregment : Fragment(),Tab3Listner {
             container,
             false
         )
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        // Observe the shared data
+
         // Check if binding is not null before accessing it
         binding?.let {
             // Obtain ViewModel instance
@@ -46,6 +52,9 @@ class Tab3Fregment : Fragment(),Tab3Listner {
             // Set the lifecycle owner to make LiveData observable
             it.lifecycleOwner = viewLifecycleOwner
             viewModel.tab3Listner = this
+            sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+                viewModel.trwNo = data
+            })
             val myList: MutableList<String> = mutableListOf()
             // Set up the AutoCompleteTextView
             var adapter = ArrayAdapter(
@@ -64,9 +73,14 @@ class Tab3Fregment : Fragment(),Tab3Listner {
 
             // Observe the selected material
             viewModel.selectedMaterial.observe(requireActivity(), Observer { selected ->
-                // Do something with the selected material (for example, show a Toast)
-                Toast.makeText(requireActivity(), "Selected Material: $selected", Toast.LENGTH_SHORT).show()
+                viewModel.onMaterialSelected(selected)
+                if (!selected.isNullOrBlank()){
+                    if (viewModel._materialSelected?.value == 11 || viewModel._materialSelected?.value == 12) {
+                        binding.editWeight.visibility=View.GONE
+                    }
+                }
             })
+
             // Return the root view of the binding
             return it.root
         }

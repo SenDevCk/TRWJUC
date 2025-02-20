@@ -71,16 +71,19 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             // Set the lifecycle owner to make LiveData observable
             it.lifecycleOwner = viewLifecycleOwner
             viewModel.tab1Listner = this
+            //spiner
+            populateCircle()
+            populateDivision()
+            populateSubdivision()
+            populateSection()
+            populateTRWStation()
+            //checkbox
+            dtrBodyFound()
+            htStud()
+            ltStud()
+            htbussiing()
+            ltbussiing()
 
-            populateCircle(viewModel,binding)
-            populateDivision(viewModel,binding)
-            populateSubdivision(viewModel,binding)
-            populateSection(viewModel,binding)
-            dtrBodyFound(viewModel,binding)
-            htStud(viewModel,binding)
-            ltStud(viewModel,binding)
-            htbussiing(viewModel,binding)
-            ltbussiing(viewModel,binding)
             // Observe the form state from ViewModel
             viewModel.formState.observe(requireActivity(), Observer { formState ->
                 formState.errorMessage?.let {
@@ -98,7 +101,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         // Return null if binding is null (shouldn't happen)
         return null
     }
-    private fun dtrBodyFound(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+    private fun dtrBodyFound(){
         binding?.radioGroupDtr?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_dtr_ok->{
@@ -111,7 +114,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
     }
 
-    private fun htStud(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+    private fun htStud(){
         binding?.radioGroupHtstud?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_htstud_ok->{
@@ -127,7 +130,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
     }
 
-    private fun ltStud(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+    private fun ltStud(){
         binding?.radioGroupLtstud?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_ltstud_ok->{
@@ -143,7 +146,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
     }
 
-    private fun htbussiing(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+    private fun htbussiing(){
         binding?.radioGroupHtbuss?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_htbuss_ok->{
@@ -159,7 +162,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
     }
 
-    private fun ltbussiing(viewModel: Tab1ViewModel, binding: FragmentTab1Binding){
+    private fun ltbussiing(){
         binding?.radioGroupLtbuss?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_ltbuss_ok->{
@@ -175,7 +178,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
     }
 
-    private fun populateCircle(viewModel: Tab1ViewModel, binding: FragmentTab1Binding) {
+    private fun populateCircle() {
         // Observe the subdivisionList LiveData
         viewModel?.circleList?.observe(viewLifecycleOwner, Observer { circles ->
             // Set up the Spinner with the subdivision data
@@ -206,7 +209,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             }
         }
     }
-    private fun populateDivision(viewModel: Tab1ViewModel, binding: FragmentTab1Binding) {
+    private fun populateDivision() {
         // Observe the subdivisionList LiveData
         viewModel.divisionList.observe(viewLifecycleOwner, Observer { divisions ->
             // Set up the Spinner with the subdivision data
@@ -235,7 +238,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             }
         }
     }
-    private fun populateSubdivision(viewModel: Tab1ViewModel, binding: FragmentTab1Binding) {
+    private fun populateSubdivision() {
         // Observe the subdivisionList LiveData
         viewModel.subdivisionList.observe(viewLifecycleOwner, Observer { subdivisions ->
             // Set up the Spinner with the subdivision data
@@ -265,7 +268,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         }
     }
 
-    private fun populateSection(viewModel: Tab1ViewModel, binding: FragmentTab1Binding) {
+    private fun populateSection() {
         // Observe the subdivisionList LiveData
         viewModel?.sectionList?.observe(viewLifecycleOwner, Observer { sections ->
             // Set up the Spinner with the subdivision data
@@ -287,6 +290,53 @@ class Tab1Fragment : Fragment(), Tab1Listner {
 //                    binding?.tab1ViewModel?.onSubDivisionSelect(item.secId)
 //                }
                 //Toast.makeText(requireContext(), "Selected: $selectedsection", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Handle when nothing is selected
+            }
+        }
+    }
+
+    private fun populateTRWStation(){
+        binding?.optionTrwStation?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if (position>0){
+                    viewModel._selectedPlace.value=String.format("%d",position)
+                }else{
+                    viewModel._selectedPlace.value=""
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Handle when nothing is selected
+            }
+        }
+    }
+
+    private fun populateCapacity(){
+        binding?.optionCapacity?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if (position>0){
+                    viewModel._selectedCapacity.value=String.format("%d",position)
+                }else{
+                    viewModel._selectedCapacity.value=""
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Handle when nothing is selected
+            }
+        }
+    }
+    private fun populateScheme(){
+        binding?.optionScheme?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if (position>0){
+                    viewModel._selectedScheme.value=String.format("%d",position)
+                }else{
+                    viewModel._selectedScheme.value=""
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
