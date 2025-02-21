@@ -96,7 +96,7 @@ class Tab3Fregment : Fragment(),Tab3Listner {
                 val productAdapter = MaterialAdapter(requireContext(), it) // Pass only the data
                 binding.materialLst.adapter = productAdapter
 
-                // Optional: Update the result number text
+                // Optional: Update the result number text change
 //                val productNumber = materialList.size.toString()
 //                binding.textViewResultNumber.text = "$productNumber sonuç bulundu"
             })
