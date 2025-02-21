@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.adapters.MaterialAdapter
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab3Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab3.Tab3Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab3.Tab3ViewModel
@@ -80,7 +81,25 @@ class Tab3Fregment : Fragment(),Tab3Listner {
                     }
                 }
             })
+            // Observe the form state from ViewModel
+            viewModel.formState.observe(requireActivity(), Observer { formState ->
+                formState.errorMessage?.let {
+                    // Show the error message
+                    Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
+                }
 
+                // Enable or disable the submit button based on form validity
+                //binding?.buttonTab1?.isEnabled = formState.isValid
+            })
+            viewModel.materialUtilized1?.observe(requireActivity(), {
+                // important part: initialize the adapter only once
+                val productAdapter = MaterialAdapter(requireContext(), it) // Pass only the data
+                binding.materialLst.adapter = productAdapter
+
+                // Optional: Update the result number text
+//                val productNumber = materialList.size.toString()
+//                binding.textViewResultNumber.text = "$productNumber sonuç bulundu"
+            })
             // Return the root view of the binding
             return it.root
         }

@@ -82,7 +82,16 @@ class Tab2Fregment : Fragment(), Tab2Listner {
                 // Reset the event so the dialog doesn't show again on configuration changes
                 viewModel.resetDatePickerEvent("DISSUE")
             }
+            // Observe the form state from ViewModel
+            viewModel.formState.observe(requireActivity(), Observer { formState ->
+                formState.errorMessage?.let {
+                    // Show the error message
+                    Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
+                }
 
+                // Enable or disable the submit button based on form validity
+                //binding?.buttonTab1?.isEnabled = formState.isValid
+            })
             return it.root
         }
         // Return null if binding is null (shouldn't happen)

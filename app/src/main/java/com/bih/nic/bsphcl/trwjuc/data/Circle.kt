@@ -14,5 +14,4 @@ class Circle (
     @PrimaryKey
     @NonNull // ✅ Explicitly mark as NonNull for Room
     var circleId:String,
-    var cirName:String?){
-}
+    var cirName:String?)
