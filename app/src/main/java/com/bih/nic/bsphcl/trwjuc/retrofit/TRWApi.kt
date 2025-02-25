@@ -12,7 +12,6 @@ import com.bih.nic.bsphcl.trwjuc.data.Section
 import com.bih.nic.bsphcl.trwjuc.data.Subdivision
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface DataApi {
     @GET("/api-trwjuc/appData/getCircle")
