@@ -49,15 +49,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.closeDrawer(GravityCompat.START)
             when (item.itemId) {
                 R.id.nav_home -> {
+                    supportFragmentManager.beginTransaction()
+                   .replace(R.id.fragment_container, MainFragment()).commit()
+                }
+                R.id.nav_jir -> {
+                    val intent = Intent(this, JointInspectionActivity::class.java)
+                    this.startActivity(intent)
+                }
+                R.id.nav_new -> {
                     val intent = Intent(this, ApplyForNewUC::class.java)
                     this.startActivity(intent)
                 }
-                R.id.nav_settings -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
-//                    supportFragmentManager.beginTransaction()
-//                    .replace(R.id.fragment_container, SettingsFragment()).commit()
-                R.id.nav_share -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
-//                    supportFragmentManager.beginTransaction()
-//                    .replace(R.id.fragment_container, ShareFragment()).commit()
                 R.id.nav_about -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
 //                    supportFragmentManager.beginTransaction()
 //                    .replace(R.id.fragment_container, AboutFragment()).commit()

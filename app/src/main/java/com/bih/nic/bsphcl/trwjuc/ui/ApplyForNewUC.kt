@@ -25,13 +25,13 @@ class ApplyForNewUC : AppCompatActivity() {
         setSupportActionBar(toolbar)
         // Set the back button icon (if not already set in XML)
         //toolbar.setNavigationIcon(R.drawable.ic_back) // Your custom back button icon
-        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         // Enable the back navigation button (up button)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Apply New" // Set Toolbar title
         // Set the color of the back button
         //supportActionBar?.setN
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         val tabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<androidx.viewpager2.widget.ViewPager2>(R.id.viewPager)
 
