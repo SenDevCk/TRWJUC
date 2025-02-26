@@ -92,10 +92,68 @@ class Tab2Fregment : Fragment(), Tab2Listner {
                 // Enable or disable the submit button based on form validity
                 //binding?.buttonTab1?.isEnabled = formState.isValid
             })
-            return it.root
+            return it.root// Inflate the layout using DataBinding
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab2, container, false)
+
+
+            // Initialize ViewModel
+            viewModel = ViewModelProvider(this).get(Tab2ViewModel::class.java)
+
+            // Set ViewModel and lifecycle owner
+            binding.tab2ViewModel = viewModel
+            binding.lifecycleOwner = viewLifecycleOwner
+
+            // Set listener for ViewModel actions
+            viewModel.tab2Listner = this
+
+            // Initialize shared ViewModel
+            sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+            // Observe shared data and update UI
+            sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+                Toast.makeText(requireActivity(),"data : "+data,Toast.LENGTH_LONG).show()
+                binding.trwSerialNo.text = Editable.Factory.getInstance().newEditable(data)
+            })
+
+            // Set click listeners for date pickers
+            binding.clickDor.setOnClickListener {
+                showDatePickerDialogRD("RD")
+                viewModel.resetDatePickerEvent("RD")
+            }
+            binding.clickDot.setOnClickListener {
+                showDatePickerDialogRD("DT")
+                viewModel.resetDatePickerEvent("DT")
+            }
+            binding.clickSvr.setOnClickListener {
+                showDatePickerDialogRD("DSVR")
+                viewModel.resetDatePickerEvent("DSVR")
+            }
+            binding.clickDoi.setOnClickListener {
+                showDatePickerDialogRD("DISSUE")
+                viewModel.resetDatePickerEvent("DISSUE")
+            }
+
+            // Observe form state and display error messages
+            viewModel.formState.observe(viewLifecycleOwner, Observer { formState ->
+                formState.errorMessage?.let {
+                    Toast.makeText(requireActivity(), it, Toast.LENGTH_SHORT).show()
+                }
+            })
+
+            // Initialize ViewPager after inflating layout
+            viewPager = requireActivity().findViewById(R.id.viewPager)
+
+            return binding.root
         }
         // Return null if binding is null (shouldn't happen)
         return null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.data.value?.let { data ->
+            binding.trwSerialNo.text = Editable.Factory.getInstance().newEditable(data)
+        }
     }
     private fun showDatePickerDialogRD(flag : String) {
         // Get the current date

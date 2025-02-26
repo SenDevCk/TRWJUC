@@ -48,7 +48,9 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
         ).build()
         populateMaterialList()
         viewModelScope.launch {
-            _materialUtilized1.value=appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized()
+            _materialUtilized1.value = withContext(Dispatchers.IO) {
+                appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized()
+            }!!
         }
 
 

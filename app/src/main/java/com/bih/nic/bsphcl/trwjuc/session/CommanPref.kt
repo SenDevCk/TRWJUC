@@ -24,7 +24,7 @@ class CommanPref private constructor(context: Context) {
 
     // ✅ Retrieve String Data
     fun getData(key: String): String? {
-        return sharedPreferences.getString(key, null)
+        return sharedPreferences.getString(key.trim(), null)
     }
 
     // ✅ Save Boolean Data

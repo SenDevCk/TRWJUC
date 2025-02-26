@@ -1,5 +1,6 @@
 package com.bih.nic.bsphcl.trwjuc.fragments
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -23,7 +24,6 @@ import com.bih.nic.bsphcl.trwjuc.fragments.tab2.Tab2ViewModel
 import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import com.bih.nic.bsphcl.trwjuc.utils.YearPickerDialog
 import java.util.Calendar
-import androidx.activity.viewModels
 import androidx.room.Room
 import com.bih.nic.bsphcl.trwjuc.data.JointInspectionReport
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
@@ -77,12 +77,19 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             populateSubdivision()
             populateSection()
             populateTRWStation()
+            populateCapacity()
+            populateScheme()
             //checkbox
             dtrBodyFound()
             htStud()
             ltStud()
             htbussiing()
             ltbussiing()
+            binding.clickDob.setOnClickListener {
+                showDatePickerDialogRD()
+                // Reset the event so the dialog doesn't show again on configuration changes
+                //viewModel.resetDatePickerEvent()
+            }
 
             // Observe the form state from ViewModel
             viewModel.formState.observe(requireActivity(), Observer { formState ->
@@ -194,11 +201,14 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         binding?.optionCircle?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //val selectedSubdivision = parent.getItemAtPosition(position) as String
-                val item = binding?.tab1ViewModel?.circles?.get(position)
-                if (item != null) {
-                    binding?.tab1ViewModel?.onCircleSelected(item.circleId)
+                if (position>0) {
+                    val item = binding?.tab1ViewModel?.circles?.get(position-1)
+                    if (item != null) {
+                        binding?.tab1ViewModel?.onCircleSelected(item.circleId)
+                    }
+                }else{
+                    binding?.tab1ViewModel?.onCircleSelected("")
                 }
-
                 // Handle the selected subdivision
 
                 //Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
@@ -226,9 +236,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 // val selectedDivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                val item = binding?.tab1ViewModel?.divisions?.get(position)
-                if (item != null) {
-                    binding?.tab1ViewModel?.onDivisionSelect(item.divId)
+                if (position>0) {
+                    val item = binding?.tab1ViewModel?.divisions?.get(position-1)
+                    if (item != null) {
+                        binding?.tab1ViewModel?.onDivisionSelect(item.divId)
+                    }
+                }else{
+                    binding?.tab1ViewModel?.onDivisionSelect("")
                 }
                 //Toast.makeText(requireContext(), "Selected: $selectedDivision", Toast.LENGTH_SHORT).show()
             }
@@ -255,9 +269,13 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //val selectedSubdivision = parent.getItemAtPosition(position) as String
                 // Handle the selected subdivision
-                val item = binding?.tab1ViewModel?.subdivisions?.get(position)
-                if (item != null) {
-                    binding?.tab1ViewModel?.onSubDivisionSelect(item.subDivId)
+                if (position>0) {
+                    val item = binding?.tab1ViewModel?.subdivisions?.get(position-1)
+                    if (item != null) {
+                        binding?.tab1ViewModel?.onSubDivisionSelect(item.subDivId)
+                    }
+                }else{
+                    binding?.tab1ViewModel?.onSubDivisionSelect("")
                 }
                 //Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
@@ -278,18 +296,22 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 sections
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding?.optionSubdivision?.adapter = adapter
+            binding?.optionSection?.adapter = adapter
         })
 
-        binding?.optionSubdivision?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding?.optionSection?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //val selectedsection = parent.getItemAtPosition(position) as String
                 // Handle the selected section
-                val item = binding?.tab1ViewModel?.sections?.get(position)
-//                if (item != null) {
-//                    binding?.tab1ViewModel?.onSubDivisionSelect(item.secId)
-//                }
-                //Toast.makeText(requireContext(), "Selected: $selectedsection", Toast.LENGTH_SHORT).show()
+                if (position>0) {
+                    val item = binding?.tab1ViewModel?.sections?.get(position-1)
+                    if (item != null) {
+                        binding?.tab1ViewModel?.onSectionSelect(item.secId)
+                    }
+                }else{
+                    binding?.tab1ViewModel?.onSectionSelect("")
+                }
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -357,10 +379,29 @@ class Tab1Fragment : Fragment(), Tab1Listner {
     fun onCalendarIconClick() {
         showYearPickerDialog()
     }
-    override fun onSuccess() {
-        Log.d("log","hi onSuccess")
-        // Insert the data in the background to prevent blocking the UI
-        viewModel.trwUniqueCode?.let { sharedViewModel.updateData(it) }
+
+    private fun showDatePickerDialogRD() {
+        // Get the current date
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // Create and show the DatePickerDialog
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, selectedYear, selectedMonth, selectedDay ->
+                // When the user selects a date, update the date in ViewModel
+                val selectedDate = "${selectedDay}/${selectedMonth + 1}/${selectedYear}"
+                viewModel.setDate(selectedDate)
+            },
+            year, month, day
+        )
+        datePickerDialog.show()
+    }
+    override fun onSuccess(datatoshare:String) {
+        Log.d("log", "hi onSuccess"+datatoshare)
+        sharedViewModel.updateData(datatoshare)
         viewPager?.currentItem = 1
         //sharedViewModel?.updateData("Data from Tab 1")
     }

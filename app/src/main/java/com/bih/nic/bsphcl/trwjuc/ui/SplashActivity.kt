@@ -24,18 +24,21 @@ import kotlinx.coroutines.withContext
 class SplashActivity : AppCompatActivity() {
 
     var progressBar: ProgressBar?=null
-    private val appDataBase = AppDatabase.getDatabase(application)
+    private lateinit var appDataBase: AppDatabase  // Declare it without initializing
     var progressMessage : TextView?=null
     var sessionData: CommanPref?=null
     val handler = Handler(Looper.getMainLooper())
     override fun onStart() {
         super.onStart()
-        sessionData = CommanPref.getInstance(applicationContext)
-        sessionData?.saveData("appdata", "N")
+        // Initialize appDatabase inside onCreate() where context is available
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        appDataBase = AppDatabase.getDatabase(applicationContext)
+        sessionData = CommanPref.getInstance(applicationContext)
+        sessionData?.saveData("appdata", "N")
         this.progressBar =findViewById<ProgressBar>(R.id.progress_bar)
         this.progressMessage = findViewById<TextView>(R.id.progress_message)
         val appData = sessionData?.getData("appdata")?.trim()
@@ -53,6 +56,8 @@ class SplashActivity : AppCompatActivity() {
         getSubDivision()
         getSection()
         getJobWiseMatUtilizationSeg()
+        sessionData?.saveData("appdata", "Y")
+        start()
     }
 
     private fun getCircle() {
@@ -75,7 +80,7 @@ class SplashActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("chandan:", "Error: ${e.message}")
             } finally {
-                withContext(Dispatchers.Main) { hideProgressBar() }
+                //withContext(Dispatchers.Main) { hideProgressBar() }
             }
         }
     }
@@ -88,7 +93,6 @@ class SplashActivity : AppCompatActivity() {
             try {
                 // ✅ UI updates on the main thread
                 withContext(Dispatchers.Main) {
-                    progressBar?.visibility = View.VISIBLE
                     progressMessage?.text = "Loading Division...."
                 }
 
@@ -114,9 +118,7 @@ class SplashActivity : AppCompatActivity() {
                 Log.e("chandan:", "Error during API call: ${e.message}")
             } finally {
                 // ✅ Ensure UI updates run on the main thread
-                withContext(Dispatchers.Main) {
-                    progressBar?.visibility = View.GONE
-                }
+
             }
         }
     }
@@ -139,8 +141,8 @@ class SplashActivity : AppCompatActivity() {
                         // Log the result
                         Log.d("chandan:", subdivList.toString())
                         // Insert data into the database
-                        val divisionDao = appDataBase?.subDivisionDao()
-                        divisionDao?.insertAll(*subdivList.toTypedArray())
+                        val subdivisionDao = appDataBase?.subDivisionDao()
+                        subdivisionDao?.insertAll(*subdivList.toTypedArray())
                         // Call getDivision after successful insert
                     } ?: run {
                         // Handle case when the body is null
@@ -155,7 +157,7 @@ class SplashActivity : AppCompatActivity() {
                 Log.e("chandan:", "Error during API call: ${e.message}")
             } finally {
                 // Hide the progress bar regardless of success or failure
-                progressBar?.visibility = View.GONE
+                //progressBar?.visibility = View.GONE
             }
         }
     }
@@ -192,7 +194,7 @@ class SplashActivity : AppCompatActivity() {
                 Log.e("chandan:", "Error during API call: ${e.message}")
             } finally {
                 // Hide the progress bar regardless of success or failure
-                progressBar?.visibility = View.GONE
+                //progressBar?.visibility = View.GONE
             }
         }
     }
@@ -217,8 +219,7 @@ class SplashActivity : AppCompatActivity() {
                         jwmuDao?.insertAll(*jobUtilList.toTypedArray())
                         // Log the result
                         progressMessage?.text="Done.."
-                        sessionData?.saveData("appdata", "Y")
-                        start()
+
                     } ?: run {
                         // Handle case when the body is null
                         Log.d("chandan:", "No data available")
@@ -232,7 +233,7 @@ class SplashActivity : AppCompatActivity() {
                 Log.e("chandan:", "Error during API call: ${e.message}")
             } finally {
                 // Hide the progress bar regardless of success or failure
-                progressBar?.visibility = View.GONE
+                //progressBar?.visibility = View.GONE
             }
         }
     }

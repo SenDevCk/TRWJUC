@@ -18,6 +18,7 @@ import com.bih.nic.bsphcl.trwjuc.data.Circle
 import com.bih.nic.bsphcl.trwjuc.data.Division
 import com.bih.nic.bsphcl.trwjuc.data.DtrDetail
 import com.bih.nic.bsphcl.trwjuc.data.JobwiseMaterialUtilizationSegment
+import com.bih.nic.bsphcl.trwjuc.data.JointInspectionReport
 import com.bih.nic.bsphcl.trwjuc.data.MasterRegisterDetails
 import com.bih.nic.bsphcl.trwjuc.data.MaterialUtilized
 import com.bih.nic.bsphcl.trwjuc.data.Section
@@ -28,7 +29,7 @@ import com.bih.nic.bsphcl.trwjuc.data.Subdivision
  *Created by Chandan Singh on 1/27/2025.
  */
 @Database(entities = [DtrDetail::class,MasterRegisterDetails::class,Circle::class,Division::class,Subdivision::class
-    ,Section::class,JobwiseMaterialUtilizationSegment::class, JointInspectionReportDao::class, MaterialUtilized::class], version = 1)
+    ,Section::class,JobwiseMaterialUtilizationSegment::class, JointInspectionReport::class, MaterialUtilized::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): DtrDetailDao
 

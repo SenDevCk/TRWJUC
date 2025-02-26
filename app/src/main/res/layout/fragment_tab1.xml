@@ -48,10 +48,12 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Enter TRW CODE"
+                        android:hint="Enter Serial Number"
                         android:imeOptions="actionNext"
                         android:textStyle="bold"
-                        android:text="@{tab1ViewModel.trwSerialNo}" />
+                        android:inputType="numberSigned"
+                        android:maxLength="4"
+                        android:text="@={tab1ViewModel.trwSerialNo}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -138,9 +140,32 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Date of birth"
-                    android:padding="10dp"
-                    android:text="@{tab1ViewModel.dob}" />
+                    android:text="Date of Burning"
+                    android:textColor="@color/design_default_color_primary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/buttonshape"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight=".8"
+                        android:gravity="center"
+                        android:text="@={tab1ViewModel.dob}"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/click_dob"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight=".2"
+                        android:src="@android:drawable/ic_menu_my_calendar" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -207,7 +232,7 @@
                         android:layout_gravity="center"
                         android:layout_weight=".8"
                         android:gravity="center"
-                        android:text="@{String.valueOf(tab1ViewModel.selectedYear)}"
+                        android:text="@={tab1ViewModel.selectedYear}"
                         android:textColor="@android:color/black"
                         android:textStyle="bold" />
 
@@ -228,7 +253,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Make"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.make}" />
+                        android:text="@={tab1ViewModel.make}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -240,7 +265,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Oil Capacity( in Ltr.)"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.oilCapacity}" />
+                        android:text="@={tab1ViewModel.oilCapacity}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -252,7 +277,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Oil Found (in Ltr.)"
                         android:imeOptions="actionNext"
-                        android:text="@{tab1ViewModel.oilFound}" />
+                        android:text="@={tab1ViewModel.oilFound}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -416,7 +441,7 @@
                         android:hint="Remarks.."
                         android:imeOptions="actionDone"
                         android:maxLines="3"
-                        android:text="@{tab1ViewModel.remarks}" />
+                        android:text="@={tab1ViewModel.remarks}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.appcompat.widget.AppCompatButton

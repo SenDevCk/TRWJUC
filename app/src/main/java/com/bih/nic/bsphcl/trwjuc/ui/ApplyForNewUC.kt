@@ -59,27 +59,27 @@ class ApplyForNewUC : AppCompatActivity() {
             trwId= data
             toolbar.subtitle=trwId
         })
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                // Check your condition here
-                if (!trwId.isNullOrBlank()) {
-                    // Prevent tab selection
-                    toolbar.subtitle="please enter serial number"
-                    tabLayout.getTabAt(previousTabIndex)?.select() // Optional: Revert to previous tab
-                } else {
-                    // Allow the tab to be selected
-                    previousTabIndex = tab?.position ?: 0 // Save the current tab index
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Do nothing, just ensure the tab remains disabled
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Optionally handle reselection of the tab
-            }
-        })
+//        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                // Check your condition here
+//                if (!trwId.isNullOrBlank()) {
+//                    // Prevent tab selection
+//                    toolbar.subtitle="please enter serial number"
+//                    tabLayout.getTabAt(previousTabIndex)?.select() // Optional: Revert to previous tab
+//                } else {
+//                    // Allow the tab to be selected
+//                    previousTabIndex = tab?.position ?: 0 // Save the current tab index
+//                }
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {
+//                // Do nothing, just ensure the tab remains disabled
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab?) {
+//                // Optionally handle reselection of the tab
+//            }
+//        })
     }
 
     // Handle the back navigation button click

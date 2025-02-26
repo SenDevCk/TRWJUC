@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.bih.nic.bsphcl.trwjuc.data.JointInspectionReport
 import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -26,7 +28,10 @@ class JointInspectionViewModel(application: Application) : AndroidViewModel(appl
             AppDatabase::class.java, "trw_db"
         ).build()
         viewModelScope.launch {
-            _jointInspectionData.value=appDataBase?.jointInspectionReportDao()?.getAll()
+            _jointInspectionData.value=
+                withContext(Dispatchers.IO) {
+                    appDataBase?.jointInspectionReportDao()?.getAll()
+                }!!
         }
 
 

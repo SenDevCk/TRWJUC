@@ -29,8 +29,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     val selectedCircle: LiveData<String> get() = _selectedCircle
     private val _selectedDicision = MutableLiveData<String>()
     val selectedDivision: LiveData<String> get() = _selectedDicision
-    private val _selectedSubDicision = MutableLiveData<String>()
-    val selectedSubDivision: LiveData<String> get() = _selectedSubDicision
+    private val _selectedSubDivision = MutableLiveData<String>()
+    val selectedSubDivision: LiveData<String> get() = _selectedSubDivision
 
     private val _selectedSection = MutableLiveData<String>()
     val selectedSection: LiveData<String> get() = _selectedSection
@@ -41,13 +41,13 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     val selectedCapacity: LiveData<String> get() = _selectedCapacity
     val _selectedScheme = MutableLiveData<String>()
     val selectedScheme: LiveData<String> get() = _selectedScheme
-    var trwUniqueCode: String? = null
-    val trwSerialNo: String? = null
-    val dob: String? = null
-    val yearOfManufacturing: String? = null
-    val make: String? = null
-    val oilCapacity: String? = null
-    val oilFound: String? = null
+    val trwSerialNo = MutableLiveData<String>()
+
+    var trwUniqueCode : String?=null
+    val dob= MutableLiveData<String>()
+    val make= MutableLiveData<String>()
+    val oilCapacity= MutableLiveData<String>()
+    val oilFound= MutableLiveData<String>()
     private val appDataBase = AppDatabase.getDatabase(application)
 
     // LiveData to store the selected option (OK or NOT) dtrBodyFound
@@ -64,10 +64,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _ltBushingSelection = MutableLiveData<String>()
     val ltBushingSelection: LiveData<String> get() = _ltBushingSelection
-
-    val remarks: String? = null
-    private val _selectedYear = MutableLiveData<Int>()
-    val selectedYear: LiveData<Int> get() = _selectedYear
+    val remarks= MutableLiveData<String>()
+    val selectedYear = MutableLiveData<String>()
     //circleList
     private val _circleList = MutableLiveData<List<String>>()
     val circleList: LiveData<List<String>> get() = _circleList
@@ -91,6 +89,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         // Example list of subdivision objects (replace with actual data)
+        dob.value="--/--/----"
+        selectedYear.value="----"
         fetchCircles()
         fetchDivisions()
         fetchSubDivisions()
@@ -108,7 +108,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) { // ✅ Run database call on background thread
             circles = appDataBase?.circleDao()?.getAll() ?: emptyList()
             withContext(Dispatchers.Main) {
-                _circleList.value = circles?.map { it?.cirName.toString() } // ✅ Update UI on main thread
+                _circleList.value =listOf("--Select Circle--" )+ (circles?.map { it?.cirName.toString() }?: emptyList()) // ✅ Update UI on main thread
             }
         }
     }
@@ -117,8 +117,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             // Launch a coroutine to fetch data asynchronously
             divisions = appDataBase?.divisionDao()?.getAllDivision() ?: emptyList()
             withContext(Dispatchers.Main) {
-                _divisionList.value =
-                    divisions?.map { it?.divName.toString() } // Assuming `Circle` has a `name` property
+                _divisionList.value =listOf("--Select Division--" )+ (divisions?.map { it?.divName.toString() }?: emptyList()) // Assuming `Circle` has a `name` property
             }
         }
     }
@@ -127,7 +126,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             // Launch a coroutine to fetch data asynchronously
             divisions = appDataBase?.divisionDao()?.getAllDivisionFromCircle(mcircle) ?: emptyList()
             withContext(Dispatchers.Main) {
-                _divisionList.value = divisions?.map { it?.divName.toString() }
+                _divisionList.value =listOf("--Select Division--" )+ (divisions?.map { it?.divName.toString() }?: emptyList())
             }// Assuming `Circle` has a `name` property
         }
     }
@@ -139,7 +138,9 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             subdivisions = appDataBase?.subDivisionDao()?.getSubdivisionByDivision(division) ?: emptyList()
             withContext(Dispatchers.Main) {
                 _subdivisionList.value =
-                    subdivisions?.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+                    listOf("--Select Subdivision--" )+
+                            (subdivisions?.map { it?.subDivName.toString() }?: emptyList())
+                // Assuming `Circle` has a `name` property
             }
         }
     }
@@ -150,7 +151,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             subdivisions = appDataBase?.subDivisionDao()?.getSubdivisionByCircle(circle) ?: emptyList()
             withContext(Dispatchers.Main) {
                 _subdivisionList.value =
-                    subdivisions?.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+                    listOf("--Select Subdivision--" )+
+                            (subdivisions?.map { it?.subDivName.toString() }?: emptyList())// Assuming `Circle` has a `name` property
             }
         }
     }
@@ -161,7 +163,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             subdivisions = appDataBase?.subDivisionDao()?.getAllSubDivision() ?: emptyList()
             withContext(Dispatchers.Main) {
                 _subdivisionList.value =
-                    subdivisions?.map { it?.subDivName.toString() } // Assuming `Circle` has a `name` property
+                    listOf("--Select Subdivision--" )+
+                            (subdivisions?.map { it?.subDivName.toString() }?: emptyList()) // Assuming `Circle` has a `name` property
             }
         }
     }
@@ -171,8 +174,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             // Launch a coroutine to fetch data asynchronously
             sections = appDataBase?.sectionDao()?.getAllSection() ?: emptyList()
             withContext(Dispatchers.Main) {
-                _sectionList.value =
-                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+                _sectionList.value =listOf("--Select Section--" )+
+                        (sections?.map { it?.secName.toString() }?: emptyList())// Assuming `Circle` has a `name` property
             }
         }
     }
@@ -182,8 +185,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             // Launch a coroutine to fetch data asynchronously
             sections = appDataBase?.sectionDao()?.getAllSectionByCircle(circle) ?: emptyList()
             withContext(Dispatchers.Main) {
-                _sectionList.value =
-                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+                _sectionList.value =listOf("--Select Section--" )+
+                        (sections?.map { it?.secName.toString() }?: emptyList()) // Assuming `Circle` has a `name` property
             }
         }
     }
@@ -193,8 +196,8 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             // Launch a coroutine to fetch data asynchronously
             sections = appDataBase?.sectionDao()?.getAllSectionByDivision(division) ?: emptyList()
             withContext(Dispatchers.Main) {
-                _sectionList.value =
-                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+                _sectionList.value =listOf("--Select Section--" )+
+                        (sections?.map { it?.secName.toString() }?: emptyList()) // Assuming `Circle` has a `name` property
             }
         }
     }
@@ -204,33 +207,37 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             // Launch a coroutine to fetch data asynchronously
             sections = appDataBase?.sectionDao()?.getAllSectionBySubdiv(subdiv) ?: emptyList()
             withContext(Dispatchers.Main) {
-                _sectionList.value =
-                    sections?.map { it?.secName.toString() } // Assuming `Circle` has a `name` property
+                _sectionList.value =listOf("--Select Section--" )+
+                        (sections?.map { it?.secName.toString() }?: emptyList())// Assuming `Circle` has a `name` property
             }
         }
     }
 
     // Method to handle circle selection
     fun onCircleSelected(selectedCircle: String) {
+        Log.d("selectedCircle",selectedCircle)
         _selectedCircle.value = selectedCircle
         fetchDivisionsByCircle(_selectedCircle.value.toString())
         fetchSubDivisionsByCircle(_selectedCircle.value.toString())
         fetchSectionsByCircle(_selectedCircle.value.toString())
     }
 
-    fun onDivisionSelect(selectedDiv: String) {
-        _selectedDicision.value = selectedDiv
+    fun onDivisionSelect(selectedDivId: String) {
+        Log.d("selectedDivId",selectedDivId)
+        _selectedDicision.value = selectedDivId
         fetchSubDivisionsByDivision(_selectedDicision.value.toString())
         fetchSectionsByDivision(_selectedDicision.value.toString())
     }
 
-    fun onSubDivisionSelect(selectedSubDiv: String) {
-        _selectedSubDicision.value = selectedSubDiv
-        fetchSectionsBySubDivision(_selectedSubDicision.value.toString())
+    fun onSubDivisionSelect(selectedSubDivId: String) {
+        Log.d("selectedSubDivId",selectedSubDivId)
+        _selectedSubDivision.value = selectedSubDivId
+        fetchSectionsBySubDivision(_selectedSubDivision.value.toString())
     }
 
-    fun onSectionSelect(selectedSec: String) {
-        _selectedSection.value = selectedSec
+    fun onSectionSelect(selectedSecId: String) {
+        Log.d("selectedSecId",selectedSecId)
+        _selectedSection.value = selectedSecId
     }
 
     fun setSelectedDtr(option: String) {
@@ -254,7 +261,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setSelectedYear(year: Int) {
-        _selectedYear.value = year
+        selectedYear.value = String.format("%d",year)
     }
     fun onNextButtonClicked(view :View){
         Log.d("log","onNextButtonClicked Coming....")
@@ -264,21 +271,21 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
                 trwUniqueCode?.takeIf { it.isNotBlank() } ?: "",
                 _selectedCircle.value,
                 selectedDivision.value,
-                _selectedSubDicision.value,
+                _selectedSubDivision.value,
                 _selectedSection.value,
                 selectedPlace.value,
-                dob,
+                dob.value,
                 selectedCapacity.value,
-                selectedYear.value.toString(),
-                make,
-                oilCapacity,
-                oilFound,
+                selectedYear.value?.trim(),
+                make.value,
+                oilCapacity.value,
+                oilFound.value,
                 _dtrBodySelection.value,
                 _htStudSelection.value,
                 _ltStudSelection.value,
                 _htBushingSelection.value,
                 _ltBushingSelection.value,
-                remarks
+                remarks.value
             );
             viewModelScope.launch {
                 try {
@@ -291,14 +298,14 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
                     // Optionally show a toast or other error handling UI
                 }
             }
-            tab1Listner?.onSuccess()
+            trwUniqueCode?.trim()?.let { tab1Listner?.onSuccess(it) }
         }else{
             _formState.value?.errorMessage?.let { tab1Listner?.onFailure(it) }
         }
     }
     fun validateForm() {
         when {
-            trwSerialNo.isNullOrBlank() -> {
+            trwSerialNo.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter TRW Unique Code")
             }
             _selectedCircle.value.isNullOrBlank() -> {
@@ -307,14 +314,20 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             _selectedDicision.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Division Should be Selected")
             }
-            _selectedSubDicision.value.isNullOrBlank() -> {
+            _selectedSubDivision.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "SubDivision Should be Selected")
             }
             _selectedSection.value.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Section email format")
+                _formState.value = FormState(errorMessage = "Section should be Selected")
             }
             _selectedPlace.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select Trw Place")
+            }
+            dob.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Select date of burning")
+            }
+            dob.value.equals("--/--/----") -> {
+                _formState.value = FormState(errorMessage = "Select date of burning")
             }
             _selectedCapacity.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select Capacity")
@@ -322,48 +335,53 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             _selectedScheme.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select Scheme")
             }
-            yearOfManufacturing.isNullOrBlank() -> {
+            selectedYear.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select Manufacturing year")
             }
-            yearOfManufacturing.length != 4 -> {
+            selectedYear.value.equals("----") -> {
                 _formState.value = FormState(errorMessage = "Year of Manufacturing must be 4 digits long")
             }
-            make.isNullOrBlank() -> {
+            make.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter Make")
             }
-            oilCapacity.isNullOrBlank() -> {
+            oilCapacity.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter Oil Capacity")
             }
-            oilFound.isNullOrBlank() -> {
+            oilFound.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter Oil Found")
             }
             _dtrBodySelection.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select DTR Body Found")
             }
             _htStudSelection.value.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Enter HT Stud")
+                _formState.value = FormState(errorMessage = "Select HT Stud")
             }
             _ltStudSelection.value.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Enter LT Stud")
+                _formState.value = FormState(errorMessage = "Select LT Stud")
             }
             _htBushingSelection.value.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Enter HT Bussing")
+                _formState.value = FormState(errorMessage = "Select HT Bussing")
             }
             _ltBushingSelection.value.isNullOrBlank() -> {
-                _formState.value = FormState(errorMessage = "Enter LT Bussing")
+                _formState.value = FormState(errorMessage = "Select LT Bussing")
+            }
+            remarks.value.isNullOrBlank() -> {
+                _formState.value = FormState(errorMessage = "Enter Remarks")
             }
             else -> {
-                val selctedYearData=String.format("%d",_selectedYear.value);
+
                 trwUniqueCode=StringBuilder().append(if (selectedPlace.value?.length == 1) "0${selectedPlace.value}" else selectedPlace.value)
-                    .append(trwSerialNo)
+                    .append(trwSerialNo.value)
                     .append(_selectedCapacity.value)
                     .append(_selectedScheme.value)
-                    .append(selctedYearData?.substring(selctedYearData.length - 2))
+                    .append(selectedYear.value?.substring(selectedYear.value?.length?.minus(2) ?: 0))
                     .toString()
                 _formState.value = FormState(isValid = true)
             }
         }
     }
-
+    fun setDate(date: String) {
+        dob.value=date
+    }
 
 }
