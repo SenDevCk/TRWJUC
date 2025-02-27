@@ -49,14 +49,14 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
     private val _formState = MutableLiveData<FormState>()
     val formState: LiveData<FormState> get() = _formState
 
-    val place:String?=null
-    val capacity:String?=null
-    val svrNo:String?=null
-    val gatePassNo:String?=null
-    val sivCdtNo:String?=null
-    val issuedTo:String?=null
-    val remarks:String?=null
-    val trwCode:String?=null
+    val place = MutableLiveData<String>()
+    val capacity= MutableLiveData<String>()
+    val svrNo= MutableLiveData<String>()
+    val gatePassNo= MutableLiveData<String>()
+    val sivCdtNo= MutableLiveData<String>()
+    val issuedTo= MutableLiveData<String>()
+    val remarks= MutableLiveData<String>()
+    val trwCode= MutableLiveData<String>()
     init {
         // Set default value
         _dateOfReceiving.value = "--/--/----"
@@ -89,22 +89,24 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
         Log.d("log","onNextButtonClicked Coming....")
         validateForm()
         if (_formState.value?.isValid == true){
-            val dataToSave= trwCode?.let {
+
+           val dataToSave= trwCode.value?.let {
                 MasterRegisterDetails(
                     it,
                     dateOfReceiving.value,
-                    place,
-                    capacity,
+                    place.value,
+                    capacity.value,
                     dateOfTesting.value,
-                    svrNo,
+                    svrNo.value,
                     dateOfSvr.value,
                     dateOfIssue.value,
-                    gatePassNo,
-                    sivCdtNo,
-                    issuedTo,
-                    remarks
+                    gatePassNo.value,
+                    sivCdtNo.value,
+                    issuedTo.value,
+                    remarks.value
                 )
-            };
+            }
+
             viewModelScope.launch {
                 try {
                     withContext(Dispatchers.IO) {
@@ -130,16 +132,16 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
         if (_dateOfReceiving.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Select Date of Receiving")
         }
-        else if (place.isNullOrBlank()){
+        else if (place.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter Place")
         }
-        else if (capacity.isNullOrBlank()){
+        else if (capacity.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter Capacity")
         }
         else if (_dateOfTesting.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Select Date of Testing")
         }
-        else if (svrNo.isNullOrBlank()){
+        else if (svrNo.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter SVR No")
         }
         else if (_dateOfSVR.value.isNullOrBlank()){
@@ -148,16 +150,16 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
         else if (_dateOfIssue.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Select date of Issue")
         }
-        else if (gatePassNo.isNullOrBlank()){
+        else if (gatePassNo.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter Gate pass no.")
         }
-        else if (sivCdtNo.isNullOrBlank()){
+        else if (sivCdtNo.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter SIV/CDT no.")
         }
-        else if (issuedTo.isNullOrBlank()){
+        else if (issuedTo.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter Issued to")
         }
-        else if (remarks.isNullOrBlank()){
+        else if (remarks.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter Remarks")
         }else{
             _formState.value = FormState(isValid = true)

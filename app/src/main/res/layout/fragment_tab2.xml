@@ -60,9 +60,9 @@
                         android:id="@+id/trw_serial_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="TRW Serial Number"
+                        android:hint="TRW CODE"
                         android:inputType="numberSigned"
-                        android:text="@{tab2ViewModel.trwCode}"
+                        android:text="@={tab2ViewModel.trwCode}"
                         android:lines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Place"
                         android:inputType="textPostalAddress"
-                        android:text="@{tab2ViewModel.place}"
+                        android:text="@={tab2ViewModel.place}"
                         android:lines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Capacity(in KVA)"
                         android:inputType="numberSigned"
-                        android:text="@{tab2ViewModel.capacity}"
+                        android:text="@={tab2ViewModel.capacity}"
                         android:lines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -144,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:hint="SRV NO"
                         android:inputType="numberSigned"
-                        android:text="@{tab2ViewModel.svrNo}"
+                        android:text="@={tab2ViewModel.svrNo}"
                         android:lines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -227,7 +227,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{tab2ViewModel.gatePassNo}"
+                        android:text="@={tab2ViewModel.gatePassNo}"
                         android:hint="Gate Pass No." />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -238,7 +238,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{tab2ViewModel.sivCdtNo}"
+                        android:text="@={tab2ViewModel.sivCdtNo}"
                         android:hint="SIV/CDT No." />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -250,7 +250,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Issued to"
-                        android:text="@{tab2ViewModel.issuedTo}"
+                        android:text="@={tab2ViewModel.issuedTo}"
                         android:lines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -261,7 +261,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{tab2ViewModel.remarks}"
+                        android:text="@={tab2ViewModel.remarks}"
                         android:hint="Remarks"
                         android:lines="2" />
                 </com.google.android.material.textfield.TextInputLayout>

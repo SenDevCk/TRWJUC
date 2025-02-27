@@ -8,10 +8,14 @@ package com.bih.nic.bsphcl.trwjuc.retrofit
 import com.bih.nic.bsphcl.trwjuc.data.Circle
 import com.bih.nic.bsphcl.trwjuc.data.Division
 import com.bih.nic.bsphcl.trwjuc.data.JobwiseMaterialUtilizationSegment
+import com.bih.nic.bsphcl.trwjuc.data.MyResponse
 import com.bih.nic.bsphcl.trwjuc.data.Section
 import com.bih.nic.bsphcl.trwjuc.data.Subdivision
+import com.bih.nic.bsphcl.trwjuc.data.TRWRequest
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface DataApi {
     @GET("/api-trwjuc/appData/getCircle")
@@ -28,4 +32,8 @@ interface DataApi {
 
     @GET("/api-trwjuc/appData/getJobwiseMatUtilizationSeg")
     suspend fun getJobwiseMatUtilizationSeg() : Response<List<JobwiseMaterialUtilizationSegment>>
+
+    @POST("/api-trwjuc/joint-inspection/reportData")
+    suspend fun postTRWData(@Body request: TRWRequest): Response<MyResponse<String>>
+
 }

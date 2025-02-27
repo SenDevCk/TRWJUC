@@ -33,8 +33,11 @@ class JointInspectionAdapter(var mContext: Context, var jointInspectionData: Lis
        /* view.imageViewProduct.setImageResource(
             mContext.resources.getIdentifier(product.image, "drawable", mContext.packageName)
         )*/
-        view.cardViewProduct.setOnClickListener {
-            Snackbar.make(it, "${jointInspectionData.uId}", Snackbar.LENGTH_SHORT).show()
+        view.butEdit.setOnClickListener {
+            Snackbar.make(it, "Update ${jointInspectionData.uId}", Snackbar.LENGTH_SHORT).show()
+        }
+        view.butUpload.setOnClickListener {
+            Snackbar.make(it, "Upload ${jointInspectionData.uId}", Snackbar.LENGTH_SHORT).show()
         }
         view.textViewDescription.text = jointInspectionData.uId
         view.textViewUnit1.text = jointInspectionData.make
