@@ -55,7 +55,7 @@ class Tab3Fregment : Fragment(),Tab3Listner {
             it.lifecycleOwner = viewLifecycleOwner
             viewModel.tab3Listner = this
             sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
-                viewModel.trwNo = data
+                viewModel.trwNo.value = data
             })
             val myList: MutableList<String> = mutableListOf()
             // Set up the AutoCompleteTextView
@@ -107,6 +107,13 @@ class Tab3Fregment : Fragment(),Tab3Listner {
         }
         // Return null if binding is null (shouldn't happen)
         return null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
+            viewModel.trwNo.value = data
+        })
     }
 
     override fun onSuccess() {

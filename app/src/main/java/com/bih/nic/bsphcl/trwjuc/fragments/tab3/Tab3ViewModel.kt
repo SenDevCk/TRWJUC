@@ -32,16 +32,17 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
     val materialSelected: LiveData<Int> get() = _materialSelected
     // Selected material (this will be bound to the AutoCompleteTextView)
     val selectedMaterial: MutableLiveData<String> = MutableLiveData()
-    var size:String?=null
-    var weight:String?=null
+    var size= MutableLiveData<String>()
+    var weight= MutableLiveData<String>()
     var materials : List<JobwiseMaterialUtilizationSegment>?=null
-    var trwNo:String?=null
+    var trwNo= MutableLiveData<String>()
     private val _formState = MutableLiveData<FormState>()
     val formState: LiveData<FormState> get() = _formState
     private val _materialUtilized1 = MutableLiveData<List<MaterialUtilized>>()
     val materialUtilized1: LiveData<List<MaterialUtilized>> get() = _materialUtilized1
     init {
         // Example list of subdivision objects (replace with actual data)
+        trwNo.value="No data Found"
         appDataBase= Room.databaseBuilder(
             application,
             AppDatabase::class.java, "trw_db"
@@ -76,23 +77,26 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
         Log.d("saveData","saveDataClicked fragmet 3")
         validateForm()
         if (_formState.value?.isValid == true){
-                trwNo?.let { it ->
-                 var materialUtilized2 : MaterialUtilized=MaterialUtilized( String.format("%d",_materialSelected.value), it,
-                        size,weight)
+
+                 var materialUtilized2 : MaterialUtilized=
+                     trwNo.value?.let {
+                         MaterialUtilized( String.format("%d",_materialSelected.value), it,
+                             size.value,weight.value)
+                     }!!
                     viewModelScope.launch {
                         appDataBase?.materialUtilizedDaoDao()?.insertAll(materialUtilized2)
                         _materialUtilized1.value=appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized()
                     }
-                }
+
         }
 
     }
     fun validateForm(){
         if(_materialSelected.value==0){
             _formState.value = FormState(errorMessage = "Select Material")
-        }else if (weight.isNullOrBlank()){
+        }else if (weight.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter value")
-        }else if (!(_materialSelected?.value == 11 || _materialSelected?.value == 12) && size.isNullOrBlank()){
+        }else if (!(_materialSelected?.value == 11 || _materialSelected?.value == 12) && size.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter size")
         }else{
             _formState.value = FormState(isValid = true)
