@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
@@ -94,6 +95,7 @@ class Tab3Fregment : Fragment(),Tab3Listner {
             viewModel.materialUtilized1?.observe(requireActivity(), {
                 // important part: initialize the adapter only once
                 val productAdapter = MaterialAdapter(requireContext(), it) // Pass only the data
+                binding?.materialLst?.layoutManager = LinearLayoutManager(requireActivity())
                 binding.materialLst.adapter = productAdapter
 
                 // Optional: Update the result number text change
