@@ -2,6 +2,7 @@ package com.bih.nic.bsphcl.trwjuc.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,13 +15,12 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab1Binding
-import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab2Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
-import com.bih.nic.bsphcl.trwjuc.fragments.tab2.Tab2ViewModel
 import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import com.bih.nic.bsphcl.trwjuc.utils.YearPickerDialog
 import java.util.Calendar
@@ -57,6 +57,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             container,
             false
         )
+
         binding.calViw.setOnClickListener {
             onCalendarIconClick()
         }
@@ -71,6 +72,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             // Set the lifecycle owner to make LiveData observable
             it.lifecycleOwner = viewLifecycleOwner
             viewModel.tab1Listner = this
+            val trwId=requireActivity().intent.getStringExtra("trwNo")
             //spiner
             populateCircle()
             populateDivision()
@@ -80,11 +82,11 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             populateCapacity()
             populateScheme()
             //checkbox
-            dtrBodyFound()
+            /*dtrBodyFound()
             htStud()
             ltStud()
             htbussiing()
-            ltbussiing()
+            ltbussiing()*/
             binding.clickDob.setOnClickListener {
                 showDatePickerDialogRD()
                 // Reset the event so the dialog doesn't show again on configuration changes
@@ -101,14 +103,73 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 // Enable or disable the submit button based on form validity
                 //binding?.buttonTab1?.isEnabled = formState.isValid
             })
+            if (trwId!=null){
+                sharedViewModel.updateData(trwId)
+                viewModel.trwUniqueCode=trwId
+                viewModel.loadData()
+            }
+            viewModel.dataToSave2.observe(viewLifecycleOwner){ dataJir->
+                //val position = viewModel.getCirclePosition(dataJir.circleId)
+                //binding.optionCircle.setSelection(position+1,true)
+               /*when(dataJir.dtrBodyFound){
+                   "OK"->binding.radioGroupDtr.check(R.id.radio_group_dtr_ok)
+                   "NOT"->binding.radioGroupDtr.check(R.id.radio_group_dtr_notok)
+               }
+                when(dataJir.htStudFound){
+                    "OK"->binding.radioGroupHtstud.check(R.id.radio_group_htstud_ok)
+                    "DEF"->binding.radioGroupHtstud.check(R.id.radio_group_htstud_def)
+                    "MISSING"->binding.radioGroupHtstud.check(R.id.radio_group_htstud_miss)
+                }
+                when(dataJir.ltStudFound){
+                    "OK"->binding.radioGroupLtstud.check(R.id.radio_group_ltstud_ok)
+                    "DEF"->binding.radioGroupLtstud.check(R.id.radio_group_ltstud_def)
+                    "MISSING"->binding.radioGroupLtstud.check(R.id.radio_group_ltstud_miss)
+                }
+                when(dataJir.htBushingFound){
+                    "OK"->binding.radioGroupHtbuss.check(R.id.radio_group_htbuss_ok)
+                    "DEF"->binding.radioGroupHtbuss.check(R.id.radio_group_htbuss_def)
+                    "MISSING"->binding.radioGroupHtbuss.check(R.id.radio_group_htbuss_miss)
+                }
+                when(dataJir.ltBushingStudFound){
+                    "OK"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_ok)
+                    "DEF"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_def)
+                    "MISSING"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_miss)
+                }*/
 
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val circlePos = viewModel.getCirclePosition(dataJir.circleId)
+                    val divPos = viewModel.getDivPosition(dataJir.divisionId)
+                    val subDivPos = viewModel.getSubDivPosition(dataJir.subdivId)
+                    val secPos = viewModel.getSectionPosition(dataJir.sectionId)
+
+                    withContext(Dispatchers.Main) {
+                        binding?.textTrwSlno?.isEnabled=false
+                        binding?.optionCircle?.setSelection(circlePos + 1)
+                        binding?.optionCircle?.isEnabled = false
+                        binding?.optionDivision?.setSelection(divPos +1)
+                        binding?.optionDivision?.isEnabled = false
+                        binding?.optionSubdivision?.setSelection(subDivPos + 1)
+                        binding?.optionSubdivision?.isEnabled = false
+                        binding?.optionSection?.setSelection(secPos + 1)
+                        binding?.optionSection?.isEnabled = false
+                        binding?.optionTrwStation?.setSelection(Integer.parseInt(dataJir.place))
+                        binding?.optionTrwStation?.isEnabled = false
+                        binding?.optionCapacity?.setSelection(Integer.parseInt(dataJir.capacity))
+                        binding?.optionCapacity?.isEnabled = false
+                        binding?.optionScheme?.setSelection(Integer.parseInt(dataJir.uId?.getOrNull(8).toString()))
+                        binding?.optionScheme?.isEnabled = false
+                       // binding.calViw.isEnabled=false
+                        binding.calViw.isClickable=false
+                    }
+                }
+            }
             // Return the root view of the binding
             return it.root
         }
         // Return null if binding is null (shouldn't happen)
         return null
     }
-    private fun dtrBodyFound(){
+    /*private fun dtrBodyFound(){
         binding?.radioGroupDtr?.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
                 R.id.radio_group_dtr_ok->{
@@ -128,7 +189,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     binding?.tab1ViewModel?.setSelectedHTSTUD("OK")
                 }
                 R.id.radio_group_htstud_def->{
-                    binding?.tab1ViewModel?.setSelectedHTSTUD("NOT")
+                    binding?.tab1ViewModel?.setSelectedHTSTUD("DEF")
                 }
                 R.id.radio_group_htstud_miss->{
                     binding?.tab1ViewModel?.setSelectedHTSTUD("MISSING")
@@ -144,7 +205,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     binding?.tab1ViewModel?.setSelectedLTSTUD("OK")
                 }
                 R.id.radio_group_ltstud_def->{
-                    binding?.tab1ViewModel?.setSelectedLTSTUD("NOT")
+                    binding?.tab1ViewModel?.setSelectedLTSTUD("DEF")
                 }
                 R.id.radio_group_ltstud_miss->{
                     binding?.tab1ViewModel?.setSelectedLTSTUD("MISSING")
@@ -160,7 +221,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     binding?.tab1ViewModel?.setSelectedHTBussing("OK")
                 }
                 R.id.radio_group_htbuss_def->{
-                    binding?.tab1ViewModel?.setSelectedHTBussing("NOT")
+                    binding?.tab1ViewModel?.setSelectedHTBussing("DEF")
                 }
                 R.id.radio_group_htbuss_miss->{
                     binding?.tab1ViewModel?.setSelectedHTBussing("MISSING")
@@ -176,14 +237,14 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     binding?.tab1ViewModel?.setSelectedLTBussing("OK")
                 }
                 R.id.radio_group_ltbuss_def->{
-                    binding?.tab1ViewModel?.setSelectedLTBussing("NOT")
+                    binding?.tab1ViewModel?.setSelectedLTBussing("DEF")
                 }
                 R.id.radio_group_ltbuss_miss->{
                     binding?.tab1ViewModel?.setSelectedLTBussing("MISSING")
                 }
             }
         }
-    }
+    }*/
 
     private fun populateCircle() {
         // Observe the subdivisionList LiveData
@@ -196,6 +257,7 @@ class Tab1Fragment : Fragment(), Tab1Listner {
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding?.optionSubdivision?.adapter = adapter
+
         })
 
         binding?.optionCircle?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -206,12 +268,10 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     if (item != null) {
                         binding?.tab1ViewModel?.onCircleSelected(item.circleId)
                     }
+
                 }else{
                     binding?.tab1ViewModel?.onCircleSelected("")
                 }
-                // Handle the selected subdivision
-
-                //Toast.makeText(requireContext(), "Selected: $selectedSubdivision", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -240,6 +300,11 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     val item = binding?.tab1ViewModel?.divisions?.get(position-1)
                     if (item != null) {
                         binding?.tab1ViewModel?.onDivisionSelect(item.divId)
+                    }
+                    if (viewModel.dataToSave2.value?.divisionId!=null) {
+                        val divPos =
+                            viewModel.getDivPosition(viewModel.dataToSave2.value?.divisionId)
+                        binding?.optionDivision?.setSelection(divPos + 1)
                     }
                 }else{
                     binding?.tab1ViewModel?.onDivisionSelect("")
@@ -410,5 +475,9 @@ class Tab1Fragment : Fragment(), Tab1Listner {
       Log.d("error msg",value)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
 
 }

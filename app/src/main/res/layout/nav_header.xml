@@ -15,18 +15,19 @@
         android:src="@drawable/ic_launcher_foreground"/>
 
     <TextView
+        android:id="@+id/nav_header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Name"
+        android:text="________________"
         android:textColor="@color/white"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/nav_header_mobile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="contact@androidknowledge.com"
+        android:text="**********"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp"/>
+        android:textStyle="normal"/>
 
 </LinearLayout>

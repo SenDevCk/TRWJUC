@@ -1,9 +1,13 @@
 package com.bih.nic.bsphcl.trwjuc.ui
 
+import CommanPref
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -12,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.data.User
 import com.bih.nic.bsphcl.trwjuc.databinding.ActivityMainBinding
 import com.bih.nic.bsphcl.trwjuc.fragments.MainFragment
 import com.bih.nic.bsphcl.trwjuc.ui.auth.AuthViewModel
@@ -36,6 +41,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
         val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
         drawerLayout.addDrawerListener(toggle)
+        // Get the header view from NavigationView
+        val headerView: View = navigationView.getHeaderView(0)
+
+        // Find views in the header
+        //val profileImage: ImageView = headerView.findViewById(R.id.nav_header_image)
+        val userName: TextView = headerView.findViewById(R.id.nav_header_name)
+        val userEmail: TextView = headerView.findViewById(R.id.nav_header_mobile)
+
+       val  user:User=CommanPref.getInstance(applicationContext).getUser()
+
+        // Set user details
+        userName.text = user.staffName
+        userEmail.text = user.mobileNo
+
         toggle.syncState()
         if (savedInstanceState == null) {
            supportFragmentManager.beginTransaction()

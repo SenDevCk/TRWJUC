@@ -48,6 +48,20 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     val make= MutableLiveData<String>()
     val oilCapacity= MutableLiveData<String>()
     val oilFound= MutableLiveData<String>()
+    val dtrOk= MutableLiveData<String>()
+    val dtrDef= MutableLiveData<String>()
+    val htStudOk= MutableLiveData<String>()
+    val htStudDef= MutableLiveData<String>()
+    val htStudMiss= MutableLiveData<String>()
+    val ltStudOk= MutableLiveData<String>()
+    val ltStudDef= MutableLiveData<String>()
+    val ltStudMiss= MutableLiveData<String>()
+    val htBusOk= MutableLiveData<String>()
+    val htBusDef= MutableLiveData<String>()
+    val htBusMiss= MutableLiveData<String>()
+    val ltBusOk= MutableLiveData<String>()
+    val ltBusDef= MutableLiveData<String>()
+    val ltBusMiss= MutableLiveData<String>()
     private val appDataBase = AppDatabase.getDatabase(application)
 
     // LiveData to store the selected option (OK or NOT) dtrBodyFound
@@ -84,13 +98,27 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     var sections:List<Section>?=null
     private val _formState = MutableLiveData<FormState>()
     val formState: LiveData<FormState> get() = _formState
-
+    var dataToSave2= MutableLiveData<JointInspectionReport>()
 
 
     init {
         // Example list of subdivision objects (replace with actual data)
         dob.value="--/--/----"
         selectedYear.value="----"
+        dtrOk.value="0"
+         dtrDef.value="0"
+         htStudOk.value="0"
+         htStudDef.value="0"
+         htStudMiss.value="0"
+         ltStudOk.value="0"
+         ltStudDef.value="0"
+         ltStudMiss.value="0"
+         htBusOk.value="0"
+         htBusDef.value="0"
+         htBusMiss.value="0"
+         ltBusOk.value="0"
+         ltBusDef.value="0"
+         ltBusMiss.value="0"
         fetchCircles()
         fetchDivisions()
         fetchSubDivisions()
@@ -217,22 +245,28 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     fun onCircleSelected(selectedCircle: String) {
         Log.d("selectedCircle",selectedCircle)
         _selectedCircle.value = selectedCircle
-        fetchDivisionsByCircle(_selectedCircle.value.toString())
-        fetchSubDivisionsByCircle(_selectedCircle.value.toString())
-        fetchSectionsByCircle(_selectedCircle.value.toString())
+        if (trwUniqueCode==null) {
+            fetchDivisionsByCircle(selectedCircle)
+        }
+        //fetchSubDivisionsByCircle(selectedCircle)
+        //fetchSectionsByCircle(selectedCircle)
     }
 
     fun onDivisionSelect(selectedDivId: String) {
         Log.d("selectedDivId",selectedDivId)
         _selectedDicision.value = selectedDivId
-        fetchSubDivisionsByDivision(_selectedDicision.value.toString())
-        fetchSectionsByDivision(_selectedDicision.value.toString())
+        if (trwUniqueCode==null) {
+            fetchSubDivisionsByDivision(selectedDivId)
+        }
+        //fetchSectionsByDivision(_selectedDicision.value.toString())
     }
 
     fun onSubDivisionSelect(selectedSubDivId: String) {
         Log.d("selectedSubDivId",selectedSubDivId)
         _selectedSubDivision.value = selectedSubDivId
-        fetchSectionsBySubDivision(_selectedSubDivision.value.toString())
+        if (trwUniqueCode==null) {
+            fetchSectionsBySubDivision(selectedSubDivId)
+        }
     }
 
     fun onSectionSelect(selectedSecId: String) {
@@ -280,11 +314,20 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
                 make.value,
                 oilCapacity.value,
                 oilFound.value,
-                _dtrBodySelection.value,
-                _htStudSelection.value,
-                _ltStudSelection.value,
-                _htBushingSelection.value,
-                _ltBushingSelection.value,
+                dtrOk.value,
+                dtrDef.value,
+                htStudOk.value,
+                htStudDef.value,
+                htStudMiss.value,
+                ltStudOk.value,
+                ltStudDef.value,
+                ltStudMiss.value,
+                htBusOk.value,
+                htBusDef.value,
+                htBusMiss.value,
+                ltBusOk.value,
+                ltBusDef.value,
+                ltBusMiss.value,
                 remarks.value
             );
             viewModelScope.launch {
@@ -350,7 +393,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             oilFound.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter Oil Found")
             }
-            _dtrBodySelection.value.isNullOrBlank() -> {
+            /*_dtrBodySelection.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select DTR Body Found")
             }
             _htStudSelection.value.isNullOrBlank() -> {
@@ -364,6 +407,48 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
             }
             _ltBushingSelection.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Select LT Bussing")
+            }*/
+            dtrOk.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter Dtr Ok !")
+            }
+            dtrDef.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter Dtr Not Ok !")
+            }
+            htStudOk.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter HT STUD Ok !")
+            }
+            htStudDef.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter HT STUD not Ok !")
+            }
+            htStudMiss.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter HT STUD Missing !")
+            }
+            ltStudOk.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter LT STUD Ok !")
+            }
+            ltStudDef.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter LT STUD NOT OK !")
+            }
+            ltStudMiss.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter LT STUD Missing !")
+            }
+            htBusOk.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter HT BUSS OK !")
+            }
+            htBusDef.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter HT BUSS NOT OK !")
+            }
+            htBusMiss.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter HT BUSS MISSING !")
+            }
+            ltBusOk.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter LT BUSS OK !")
+            }
+            ltBusDef.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter LT BUSS NOT OK !")
+            }
+            ltBusMiss.value.isNullOrBlank()->{
+                _formState.value = FormState(errorMessage = "Enter LT BUSS MISSING !")
             }
             remarks.value.isNullOrBlank() -> {
                 _formState.value = FormState(errorMessage = "Enter Remarks")
@@ -382,6 +467,51 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun setDate(date: String) {
         dob.value=date
+    }
+
+    fun loadData() {
+        viewModelScope.launch(Dispatchers.IO) {
+          var mdata=  trwUniqueCode?.let { code ->appDataBase?.jointInspectionReportDao()?.loadAllById(code)}
+            try {
+                withContext(Dispatchers.Main) {
+                    mdata?.let { report ->
+                            dataToSave2.value=report
+                            trwSerialNo.value = report.uId?.trim()?.substring(2, 6)
+                                dob.value = report.dateOfBirth?:""
+                            selectedYear.value = report.year?:""
+                            make.value = report.make?:""
+                            oilCapacity.value = report.oilCapacity?:""
+                            oilFound.value = report.oilFound?:""
+                            remarks.value = report.remarks?:""
+                        }
+                    }
+
+                Log.d("log", "Report inserted successfully")
+            } catch (e: Exception) {
+                Log.e("onSuccess", "Error inserting report: ${e.message}")
+                // Optionally show a toast or other error handling UI
+            }
+        }
+    }
+
+    fun getCirclePosition(circleId: String?): Int {
+        Log.d("circleId : ","$circleId")
+        return circles?.indexOfFirst { it.circleId == circleId }?.takeIf { it >= 0 } ?: 0
+    }
+
+    fun getDivPosition(divisionId: String?): Int {
+        Log.d("divisionId : ","$divisionId")
+        return divisions?.indexOfFirst { it.divId == divisionId }?.takeIf { it >= 0 } ?: 0
+    }
+
+    fun getSubDivPosition(subDivisionId: String?): Int {
+        Log.d("subDivisionId : ","$subDivisionId")
+        return subdivisions?.indexOfFirst { it.subDivId == subDivisionId }?.takeIf { it >= 0 } ?: 0
+    }
+
+    fun getSectionPosition(secId: String?): Int {
+        Log.d("secId : ","$secId")
+        return sections?.indexOfFirst { it.secId == secId }?.takeIf { it >= 0 } ?: 0
     }
 
 }

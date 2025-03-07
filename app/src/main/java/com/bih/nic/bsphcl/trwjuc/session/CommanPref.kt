@@ -1,5 +1,8 @@
 import android.content.Context
 import android.content.SharedPreferences
+import com.bih.nic.bsphcl.trwjuc.data.User
+import com.google.gson.Gson
+
 
 class CommanPref private constructor(context: Context) {
 
@@ -45,5 +48,17 @@ class CommanPref private constructor(context: Context) {
     // ✅ Clear All Data
     fun clearAll() {
         sharedPreferences.edit().clear().apply()
+    }
+
+    fun saveUser(data: User?) {
+        val gson = Gson()
+        val json = gson.toJson(data)
+        sharedPreferences.edit().putString("userdata", json).apply()
+    }
+    fun getUser():User {
+        val gson = Gson()
+        val json: String = sharedPreferences.getString("userdata", null)!!
+        val user: User = gson.fromJson(json, User::class.java)
+        return user
     }
 }

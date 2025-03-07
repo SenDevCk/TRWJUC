@@ -48,20 +48,47 @@ data class JointInspectionReport(
     @ColumnInfo(name = "oil_found")
     var oilFound: String?,
 
-    @ColumnInfo(name = "dtr_found")
-    var dtrBodyFound: String?,
+    @ColumnInfo(name = "dtr_ok")
+    var dtrBodyOK: String?,
 
-    @ColumnInfo(name = "htstud_found")
-    var htStudFound: String?,
+    @ColumnInfo(name = "dtr_Def")
+    var dtrBodyDef: String?,
 
-    @ColumnInfo(name = "ltstud_found")
-    var ltStudFound: String?,
+    @ColumnInfo(name = "ht_stud_ok")
+    var htStudOK: String?,
 
-    @ColumnInfo(name = "htbussing_found")
-    var htBushingFound: String?,
+    @ColumnInfo(name = "ht_stud_def")
+    var htStudDef: String?,
 
-    @ColumnInfo(name = "ltbussing_found")
-    var ltBushingStudFound: String?,
+    @ColumnInfo(name = "ht_stud_miss")
+    var htStudMiss: String?,
+
+    @ColumnInfo(name = "lt_stud_ok")
+    var ltStudOk: String?,
+
+    @ColumnInfo(name = "lt_stud_def")
+    var ltStudDef: String?,
+
+    @ColumnInfo(name = "lt_stud_miss")
+    var ltStudMiss: String?,
+
+    @ColumnInfo(name = "ht_buss_ok")
+    var htBushOk: String?,
+
+    @ColumnInfo(name = "ht_buss_def")
+    var htBushDef: String?,
+
+    @ColumnInfo(name = "ht_buss_miss")
+    var htBushMiss: String?,
+
+    @ColumnInfo(name = "lt_buss_ok")
+    var ltBusOk: String?,
+
+    @ColumnInfo(name = "lt_buss_def")
+    var ltBusDef: String?,
+
+    @ColumnInfo(name = "lt_buss_miss")
+    var ltBusMiss: String?,
 
     @ColumnInfo(name = "remarks")
     var remarks: String?

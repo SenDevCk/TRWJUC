@@ -30,7 +30,7 @@ class AuthViewModel : ViewModel() {
             }
             else -> {
                 // Authentication successful
-                authListener?.onSuccess()
+                authListener?.onSuccess(userId!!,password!!)
             }
         }
     }

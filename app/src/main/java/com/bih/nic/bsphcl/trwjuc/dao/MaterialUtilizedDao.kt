@@ -15,8 +15,8 @@ import com.bih.nic.bsphcl.trwjuc.data.MaterialUtilized
  */
 @Dao
 interface MaterialUtilizedDao {
-    @Query("SELECT * FROM MaterialUtilized")
-    fun getAllMaterialUtilized(): List<MaterialUtilized>
+    @Query("SELECT * FROM MaterialUtilized where trwUniqueId=:trwId")
+    fun getAllMaterialUtilized(trwId:String): List<MaterialUtilized>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) // ✅ Replaces existing entries if there's a conflict
     fun insertAll(vararg materialUtilized: MaterialUtilized)

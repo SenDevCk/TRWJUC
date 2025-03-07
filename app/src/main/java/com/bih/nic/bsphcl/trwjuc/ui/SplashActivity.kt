@@ -38,11 +38,11 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         appDataBase = AppDatabase.getDatabase(applicationContext)
         sessionData = CommanPref.getInstance(applicationContext)
-        sessionData?.saveData("appdata", "N")
+       // sessionData?.saveData("appdata", "N")
         this.progressBar =findViewById<ProgressBar>(R.id.progress_bar)
         this.progressMessage = findViewById<TextView>(R.id.progress_message)
         val appData = sessionData?.getData("appdata")?.trim()
-        if (appData.equals("N", ignoreCase = true)) {
+        if (appData==null) {
             loadData()
         } else {
             start()

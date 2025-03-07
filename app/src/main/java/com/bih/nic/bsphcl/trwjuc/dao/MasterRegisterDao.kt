@@ -19,9 +19,8 @@ interface MasterRegisterDao {
     @Query("SELECT * FROM MasterRegisterDetails WHERE uid IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<MasterRegisterDetails>
 
-//    @Query("SELECT * FROM MasterRegisterDetails WHERE first_name LIKE :first AND " +
-//            "last_name LIKE :last LIMIT 1")
-//    fun findByName(first: String, last: String): MasterRegisterDetails
+    @Query("SELECT * FROM MasterRegisterDetails WHERE uid = :userIds")
+    fun loadAllById(userIds: String): MasterRegisterDetails
 
     @Insert
     fun insertAll(vararg masterRegisterDetails: MasterRegisterDetails)

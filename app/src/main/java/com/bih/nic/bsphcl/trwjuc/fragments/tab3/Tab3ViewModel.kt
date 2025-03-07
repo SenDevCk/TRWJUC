@@ -38,7 +38,7 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
     var trwNo= MutableLiveData<String>()
     private val _formState = MutableLiveData<FormState>()
     val formState: LiveData<FormState> get() = _formState
-    private val _materialUtilized1 = MutableLiveData<List<MaterialUtilized>>()
+    val _materialUtilized1 = MutableLiveData<List<MaterialUtilized>>()
     val materialUtilized1: LiveData<List<MaterialUtilized>> get() = _materialUtilized1
     init {
         // Example list of subdivision objects (replace with actual data)
@@ -47,13 +47,12 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
             application,
             AppDatabase::class.java, "trw_db"
         ).build()
-        populateMaterialList()
         viewModelScope.launch {
             _materialUtilized1.value = withContext(Dispatchers.IO) {
-                appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized()
+                appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized(trwNo.value!!)
             }!!
         }
-
+        populateMaterialList()
 
     }
 
@@ -78,15 +77,29 @@ class Tab3ViewModel(application: Application) : AndroidViewModel(application){
         validateForm()
         if (_formState.value?.isValid == true){
 
-                 var materialUtilized2 : MaterialUtilized=
+                 var materialUtilized2 =
                      trwNo.value?.let {
                          MaterialUtilized( String.format("%d",_materialSelected.value), it,
                              size.value,weight.value)
-                     }!!
-                    viewModelScope.launch {
+                     }
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (materialUtilized2 != null) {
                         appDataBase?.materialUtilizedDaoDao()?.insertAll(materialUtilized2)
-                        _materialUtilized1.value=appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized()
+                        val data1 =
+                            trwNo.value?.let {
+                                appDataBase?.materialUtilizedDaoDao()?.getAllMaterialUtilized(
+                                    it
+                                )
+                            } // Fetch in IO
+
+                        withContext(Dispatchers.Main) {
+                            _materialUtilized1.value = data1!! // ✅ Now it's safe to update LiveData
+                        }
                     }
+                }
+            }
 
         }
 

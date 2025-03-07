@@ -1,6 +1,8 @@
 package com.bih.nic.bsphcl.trwjuc.ui
 
+import CommanPref
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,17 +16,25 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.data.LoginRequest
 import com.bih.nic.bsphcl.trwjuc.databinding.ActivityLoginBinding
+import com.bih.nic.bsphcl.trwjuc.retrofit.DataApi
+import com.bih.nic.bsphcl.trwjuc.retrofit.RetrofitHelper
 import com.bih.nic.bsphcl.trwjuc.ui.auth.AuthListner
 import com.bih.nic.bsphcl.trwjuc.ui.auth.AuthViewModel
 import com.bih.nic.bsphcl.trwjuc.utils.showPermissionExplanationUI
 import com.bih.nic.bsphcl.trwjuc.utils.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity(),AuthListner {
     var deviceId:String?=null
     var binding :ActivityLoginBinding?=null
     var viewModel : AuthViewModel?=null
+    var mProgressDialog : ProgressDialog?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding  =DataBindingUtil.setContentView(this,R.layout.activity_login)
@@ -47,12 +57,10 @@ class LoginActivity : AppCompatActivity(),AuthListner {
         Log.d("log","onStartLogin")
         //toast("onStartLogin")
     }
-    override fun onSuccess() {
+    override fun onSuccess(userId:String,password:String) {
         //TODO("Not yet implemented")
         Log.d("log","onSuccess")
-        //toast("onSuccess")
-        val intent = Intent(this, MainActivity::class.java)
-        this.startActivity(intent)
+        login(userId,password)
     }
 
     override fun onFailure(message: String) {
@@ -114,6 +122,78 @@ class LoginActivity : AppCompatActivity(),AuthListner {
         }catch (ex:Exception){
             ex.printStackTrace()
         }
+    }
+
+    fun login(uId:String,pass:String){
+        binding?.buttonLogin?.isClickable=false
+        showProgressBar("Logging....")
+        val dataApi = RetrofitHelper.getInstance().create(DataApi::class.java)
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val result = dataApi.login(LoginRequest(uId,pass))
+                Log.d("data ","$result")
+                if (result.isSuccessful) {
+                    result.body()?.let { res ->
+                        Log.d("data ","$res")
+                        if (res!=null){
+                            if (res.token!=null){
+                                 CommanPref.getInstance(applicationContext).saveData("token",res?.token)
+                                 CommanPref.getInstance(applicationContext).saveUser(res.data)
+                                withContext(Dispatchers.Main) {
+                                    startMainActivity()
+                                }
+                            }else{
+                                binding?.buttonLogin?.isClickable=true
+                                withContext(Dispatchers.Main) {
+                                    toast("Login Unsuccessful")
+                                }
+                            }
+                        }else{
+                            withContext(Dispatchers.Main) {
+                                toast("Login Unsuccessful")
+                            }
+                        }
+                    }
+                } else {
+                    Log.d("chandan:", "Error: ${result.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        toast("Login Unsuccessful")
+                    }
+
+                }
+            } catch (e: Exception) {
+                Log.e("chandan:", "Error: ${e.message}")
+
+            } finally {
+                withContext(Dispatchers.Main) {
+                    binding?.buttonLogin?.isClickable=true
+                    hideProgress()
+                }
+            }
+        }
+    }
+
+    private fun startMainActivity() {
+        //toast("onSuccess")
+        val intent = Intent(this, MainActivity::class.java)
+        //intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK
+        //intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TOP
+        //intent.flags=Intent.FLAG_ACTIVITY_NO_HISTORY
+        this.startActivity(intent)
+    }
+
+    private fun hideProgress() {
+        if (mProgressDialog?.isShowing == true){
+            mProgressDialog?.dismiss()
+        }
+    }
+
+    private fun showProgressBar(s: String) {
+        mProgressDialog = ProgressDialog(this)
+        mProgressDialog?.setTitle("" +
+                "Logging...")
+        mProgressDialog?.setMessage("$s")
+        mProgressDialog?.show()
     }
 
 }

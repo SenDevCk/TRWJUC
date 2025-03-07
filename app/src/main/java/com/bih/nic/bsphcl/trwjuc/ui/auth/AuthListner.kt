@@ -6,6 +6,6 @@ package com.bih.nic.bsphcl.trwjuc.ui.auth
  */
 interface AuthListner {
     fun onStartLogin()
-    fun onSuccess()
+    fun onSuccess(userId:String,password:String)
     fun onFailure(message:String)
 }

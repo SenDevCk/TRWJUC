@@ -129,7 +129,7 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun validateForm() {
-        if (_dateOfReceiving.value.isNullOrBlank()){
+        if (_dateOfReceiving.value.isNullOrBlank()||_dateOfReceiving.value.equals("--/--/----")){
             _formState.value = FormState(errorMessage = "Select Date of Receiving")
         }
         else if (place.value.isNullOrBlank()){
@@ -138,16 +138,16 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
         else if (capacity.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter Capacity")
         }
-        else if (_dateOfTesting.value.isNullOrBlank()){
+        else if (_dateOfTesting.value.isNullOrBlank()||_dateOfTesting.value.equals("--/--/----")){
             _formState.value = FormState(errorMessage = "Select Date of Testing")
         }
         else if (svrNo.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Enter SVR No")
         }
-        else if (_dateOfSVR.value.isNullOrBlank()){
+        else if (_dateOfSVR.value.isNullOrBlank()||_dateOfSVR.value.equals("--/--/----")){
             _formState.value = FormState(errorMessage = "Select date of SVR")
         }
-        else if (_dateOfIssue.value.isNullOrBlank()){
+        else if (_dateOfIssue.value.isNullOrBlank()||_dateOfIssue.value.isNullOrBlank()){
             _formState.value = FormState(errorMessage = "Select date of Issue")
         }
         else if (gatePassNo.value.isNullOrBlank()){
@@ -163,6 +163,35 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
             _formState.value = FormState(errorMessage = "Enter Remarks")
         }else{
             _formState.value = FormState(isValid = true)
+        }
+    }
+    fun loadData(trwIdFound:String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var mdata=
+                appDataBase?.masterRegisterDao()?.loadAllById(trwIdFound)
+            try {
+                withContext(Dispatchers.Main) {
+                    mdata?.let { item ->
+                        _dateOfReceiving.value = item.dateOfReceiving?:""
+                        trwCode.value = item.uId?:""
+                        place.value = item.place?:""
+                        capacity.value = item.capacity?:""
+                        _dateOfTesting.value = item.dateOfTesting?:""
+                        svrNo.value = item.svrNo?:""
+                        _dateOfSVR.value = item.dateOfSvr?:""
+                        _dateOfIssue.value = item.dateOfIssue?:""
+                        gatePassNo.value = item.gatePassNo?:""
+                        sivCdtNo.value = item.sivCdtNo?:""
+                        issuedTo.value = item.issuedTo?:""
+                        remarks.value = item.remarks?:""
+                    }
+                }
+
+                Log.d("log", "Report inserted successfully")
+            } catch (e: Exception) {
+                Log.e("onSuccess", "Error inserting report: ${e.message}")
+                // Optionally show a toast or other error handling UI
+            }
         }
     }
 }

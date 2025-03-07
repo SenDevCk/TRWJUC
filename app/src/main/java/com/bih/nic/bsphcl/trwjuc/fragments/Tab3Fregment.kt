@@ -6,11 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -20,6 +23,9 @@ import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab3Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab3.Tab3Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab3.Tab3ViewModel
 import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class Tab3Fregment : Fragment(),Tab3Listner {
@@ -72,7 +78,12 @@ class Tab3Fregment : Fragment(),Tab3Listner {
                 adapter.addAll(materials)
                 adapter.notifyDataSetChanged()
             })
-
+            // Handle item click
+            binding.spYearMan.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                val selectedItem = parent.getItemAtPosition(position) as String
+                //Toast.makeText(requireContext(), "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
+                viewModel.onMaterialSelected(selectedItem)
+            }
             // Observe the selected material
             viewModel.selectedMaterial.observe(requireActivity(), Observer { selected ->
                 viewModel.onMaterialSelected(selected)
@@ -114,6 +125,20 @@ class Tab3Fregment : Fragment(),Tab3Listner {
         sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
             viewModel.trwNo.value = data
         })
+        if (viewModel.trwNo.value.isNullOrEmpty() || viewModel.trwNo.value.equals("No data Found")){
+            val builder = AlertDialog.Builder(requireActivity())
+            builder.setTitle("Info")
+            builder.setMessage("Please fill first tab first !")
+
+            builder.setPositiveButton("OK") { dialog, _ ->
+                // Perform an action when "Yes" is clicked
+                dialog.dismiss()
+                viewPager?.currentItem = 0
+            }
+            val dialog = builder.create()
+            dialog.setCancelable(false)
+            dialog.show()
+        }
     }
 
     override fun onSuccess() {

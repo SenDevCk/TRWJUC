@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -45,6 +46,7 @@ class Tab2Fregment : Fragment(), Tab2Listner {
         // Observe the shared data
         sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
             binding.trwSerialNo.text = Editable.Factory.getInstance().newEditable(data)
+            binding.trwSerialNo.isEnabled=false
         })
         // Check if binding is not null before accessing it
         binding?.let {
@@ -113,6 +115,7 @@ class Tab2Fregment : Fragment(), Tab2Listner {
             sharedViewModel.data.observe(viewLifecycleOwner, Observer { data ->
                 Toast.makeText(requireActivity(),"data : "+data,Toast.LENGTH_LONG).show()
                 binding.trwSerialNo.text = Editable.Factory.getInstance().newEditable(data)
+                binding.trwSerialNo.isEnabled
             })
 
             // Set click listeners for date pickers
@@ -153,6 +156,28 @@ class Tab2Fregment : Fragment(), Tab2Listner {
         super.onResume()
         sharedViewModel.data.value?.let { data ->
             binding.trwSerialNo.text = Editable.Factory.getInstance().newEditable(data)
+            binding.trwSerialNo.isEnabled=false
+        }
+        val trwId=requireActivity().intent.getStringExtra("trwNo")
+        if (trwId!=null){
+            viewModel.trwCode.value=trwId
+            viewModel.loadData(trwId)
+        }
+        if(viewModel.trwCode.value.isNullOrEmpty()){
+            val builder = AlertDialog.Builder(requireActivity())
+            builder.setTitle("Info")
+            builder.setMessage("Please fill first tab first !")
+
+            builder.setPositiveButton("OK") { dialog, _ ->
+                // Perform an action when "Yes" is clicked
+                dialog.dismiss()
+                viewPager?.currentItem = 0
+            }
+            val dialog = builder.create()
+            dialog.setCancelable(false)
+            dialog.show()
+
+
         }
     }
     private fun showDatePickerDialogRD(flag : String) {
@@ -175,7 +200,6 @@ class Tab2Fregment : Fragment(), Tab2Listner {
         datePickerDialog.show()
     }
     override fun onSuccess() {
-
         Toast.makeText(requireContext(), "Data saved", Toast.LENGTH_SHORT).show()
         requireActivity().finish()
         //viewPager?.currentItem = 2

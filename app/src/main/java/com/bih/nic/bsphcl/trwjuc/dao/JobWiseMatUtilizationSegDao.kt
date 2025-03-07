@@ -17,6 +17,8 @@ interface JobWiseMatUtilizationSegDao {
     @Query("SELECT * FROM JobwiseMaterialUtilizationSegment")
     fun getAllMatSeg(): List<JobwiseMaterialUtilizationSegment>
 
+    @Query("SELECT * FROM JobwiseMaterialUtilizationSegment where id=:id")
+    fun getMatSegById(id:String): JobwiseMaterialUtilizationSegment
     @Insert
     fun insertAll(vararg jobs: JobwiseMaterialUtilizationSegment)
 
