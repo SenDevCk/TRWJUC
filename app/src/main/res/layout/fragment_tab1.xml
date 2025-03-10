@@ -685,7 +685,96 @@
                         android:maxLines="3"
                         android:text="@={tab1ViewModel.remarks}" />
                 </com.google.android.material.textfield.TextInputLayout>
-
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/buttonshape">
+          <ImageView
+              android:id="@+id/img_dtr_name_palte"
+              android:layout_width="match_parent"
+              android:layout_height="300dp"/>
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:text="DTR name plate image"/>
+          <LinearLayout
+              android:id="@+id/ll_name_palte_imag"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="bottom|right"
+              android:orientation="vertical">
+              <ImageView
+                  android:layout_width="30dp"
+                  android:layout_height="30dp"
+                  android:layout_gravity="center"
+                  android:src="@drawable/ic_camera"/>
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Take Image"/>
+          </LinearLayout>
+      </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/buttonshape">
+                    <ImageView
+                        android:id="@+id/img_dtr_lt_stud"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="DTR LT stud image"/>
+                    <LinearLayout
+                        android:id="@+id/ll_ltstud_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_camera"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Take Image"/>
+                    </LinearLayout>
+                </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/buttonshape">
+                    <ImageView
+                        android:id="@+id/img_ht_stud"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="DTR HT stud image"/>
+                    <LinearLayout
+                        android:id="@+id/ll_htstud_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_camera"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Take Image"/>
+                    </LinearLayout>
+                </FrameLayout>
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/button_tab1"
                     android:layout_width="match_parent"

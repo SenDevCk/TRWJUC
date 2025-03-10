@@ -99,8 +99,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
     private val _formState = MutableLiveData<FormState>()
     val formState: LiveData<FormState> get() = _formState
     var dataToSave2= MutableLiveData<JointInspectionReport>()
-
-
+    val clickedForImg= MutableLiveData<Int>()
     init {
         // Example list of subdivision objects (replace with actual data)
         dob.value="--/--/----"

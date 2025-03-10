@@ -1,42 +1,49 @@
 package com.bih.nic.bsphcl.trwjuc.fragments
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import androidx.viewpager2.widget.ViewPager2
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import com.bih.nic.bsphcl.trwjuc.databinding.FragmentTab1Binding
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
 import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import com.bih.nic.bsphcl.trwjuc.utils.YearPickerDialog
-import java.util.Calendar
-import androidx.room.Room
-import com.bih.nic.bsphcl.trwjuc.data.JointInspectionReport
-import com.bih.nic.bsphcl.trwjuc.databases.AppDatabase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 
 
 class Tab1Fragment : Fragment(), Tab1Listner {
     private lateinit var binding: FragmentTab1Binding
     private lateinit var viewModel: Tab1ViewModel
     var viewPager:ViewPager2?=null
+    val REQUEST_IMAGE_CAPTURE=1
 
     var appDataBase : AppDatabase?=null
     private lateinit var sharedViewModel: SharedViewModel
@@ -135,7 +142,21 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     "DEF"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_def)
                     "MISSING"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_miss)
                 }*/
-
+                val imageCapture=ImageCapture.Builder().
+                    setTargetRotation(view?.display?.rotation).build()
+                camraProvider.bindToLifecycle(viewLifecycleOwner,camraSelector,)
+                binding.llNamePalteImag.setOnClickListener {
+                    viewModel.clickedForImg.value=1
+                    //dispatchTakePictureIntent()
+                }
+                binding.llLtstudImg.setOnClickListener {
+                    viewModel.clickedForImg.value=2
+                    dispatchTakePictureIntent()
+                }
+                binding.llHtstudImg.setOnClickListener {
+                    viewModel.clickedForImg.value=3
+                    dispatchTakePictureIntent()
+                }
                 lifecycleScope.launch(Dispatchers.IO) {
                     val circlePos = viewModel.getCirclePosition(dataJir.circleId)
                     val divPos = viewModel.getDivPosition(dataJir.divisionId)
@@ -479,5 +500,50 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         super.onResume()
 
     }
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    // Error occurred while creating the File
+                    ex.printStackTrace()
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        requireActivity(),
+                        "com.example.firstproject.fileprovider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            }
+        }
+    }
+
+    lateinit var currentPhotoPath: String
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? =requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES+"/Trwapp/Photos/"+viewModel.trwUniqueCode)
+        return File.createTempFile(
+            "JPEG_${viewModel.trwUniqueCode}_${viewModel.clickedForImg.value}", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intentsclickedForImg
+            currentPhotoPath = absolutePath
+        }
+    }
+
+
 
 }
