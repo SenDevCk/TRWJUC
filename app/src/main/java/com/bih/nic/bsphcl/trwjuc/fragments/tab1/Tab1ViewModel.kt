@@ -476,7 +476,7 @@ class Tab1ViewModel(application: Application) : AndroidViewModel(application) {
                     mdata?.let { report ->
                             dataToSave2.value=report
                             trwSerialNo.value = report.uId?.trim()?.substring(2, 6)
-                                dob.value = report.dateOfBirth?:""
+                                dob.value = report.dateOfBurning?:""
                             selectedYear.value = report.year?:""
                             make.value = report.make?:""
                             oilCapacity.value = report.oilCapacity?:""

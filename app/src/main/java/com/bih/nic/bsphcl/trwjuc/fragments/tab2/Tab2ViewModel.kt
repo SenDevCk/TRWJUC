@@ -103,7 +103,10 @@ class Tab2ViewModel(application: Application): AndroidViewModel(application) {
                     gatePassNo.value,
                     sivCdtNo.value,
                     issuedTo.value,
-                    remarks.value
+                    remarks.value,
+                    "",
+                    "",
+                    ""
                 )
             }
 

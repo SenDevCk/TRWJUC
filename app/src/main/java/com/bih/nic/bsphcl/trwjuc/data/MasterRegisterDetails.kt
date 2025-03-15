@@ -45,6 +45,15 @@ data class MasterRegisterDetails(
     @ColumnInfo(name = "issued_to")
     var issuedTo: String?,
 
+    @ColumnInfo(name = "dtr_name_plt_img")
+    var dtrNamePltImg: String?,
+
+    @ColumnInfo(name = "lt_stud_img")
+    var ltStudImg: String?,
+
+    @ColumnInfo(name = "ht_stud_img")
+    var htStudImg: String?,
+
     @ColumnInfo(name = "remarks")
     var remarks: String?
 )

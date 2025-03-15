@@ -6,8 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,10 +16,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.camera.core.ImageCapture
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -36,70 +31,33 @@ import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1Listner
 import com.bih.nic.bsphcl.trwjuc.fragments.tab1.Tab1ViewModel
 import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import com.bih.nic.bsphcl.trwjuc.utils.YearPickerDialog
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import android.Manifest
-import android.content.ContentValues
-import android.os.Build
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCaptureException
-import java.util.Locale
+import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.activity.result.ActivityResultLauncher
+import androidx.core.app.ActivityCompat
+import com.bih.nic.bsphcl.trwjuc.ui.CameraActivity
 
 
 class Tab1Fragment : Fragment(), Tab1Listner {
     private lateinit var binding: FragmentTab1Binding
     private lateinit var viewModel: Tab1ViewModel
     var viewPager:ViewPager2?=null
-    val REQUEST_IMAGE_CAPTURE=1
+    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+    private val REQUEST_CODE_PERMISSIONS = 10
 
     var appDataBase : AppDatabase?=null
     private lateinit var sharedViewModel: SharedViewModel
-    private val imageCapture: ImageCapture? = null
-    private val cameraProviderFuture: ListenableFuture<ProcessCameraProvider>? = null
 
-    private var alertDialog: AlertDialog? = null
 
-    private val permissionsList = ArrayList<String>()
-    private val permissionsStr = arrayOf(Manifest.permission.CAMERA,Manifest.permission.READ_MEDIA_IMAGES,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    private var permissionsCount = 0
-    private var lensFacing = CameraSelector.LENS_FACING_BACK
 
-    val permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-        val list = ArrayList(result.values)
-        permissionsList.clear()
-        permissionsCount = 0
+    private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
 
-        for (i in list.indices) {
-            if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
-                permissionsList.add(permissionsStr[i])
-            } else if (!hasPermission(requireActivity(), permissionsStr[i])) {
-                permissionsCount++
-            }
-        }
-
-        when {
-            permissionsList.isNotEmpty() -> {
-                // Some permissions are denied and can be asked again.
-                askForPermissions(permissionsList)
-            }
-            permissionsCount > 0 -> {
-                // Show alert dialog
-                showPermissionDialog()
-            }
-            else -> {
-                // All permissions granted. Do your stuff
-                //makeAttendenceService()
-                takePhoto()
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -153,7 +111,19 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                 // Reset the event so the dialog doesn't show again on configuration changes
                 //viewModel.resetDatePickerEvent()
             }
+            binding.llNamePalteImag.setOnClickListener {
+                viewModel.clickedForImg.value=1
+                startCamera()
 
+            }
+            binding.llLtstudImg.setOnClickListener {
+                viewModel.clickedForImg.value=2
+                startCamera()
+            }
+            binding.llHtstudImg.setOnClickListener {
+                viewModel.clickedForImg.value=3
+                startCamera()
+            }
             // Observe the form state from ViewModel
             viewModel.formState.observe(requireActivity(), Observer { formState ->
                 formState.errorMessage?.let {
@@ -196,22 +166,10 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                     "DEF"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_def)
                     "MISSING"->binding.radioGroupLtbuss.check(R.id.radio_group_ltbuss_miss)
                 }*/
-                val imageCapture= view?.display?.rotation?.let { it1 ->
-                    ImageCapture.Builder().setTargetRotation(it1).build()
-                }
+//                imageCapture= view?.display?.rotation?.let { it1 ->
+//                    ImageCapture.Builder().setTargetRotation(it1).build()
+//                }
                 //camraProvider.bindToLifecycle(viewLifecycleOwner, camraSelector)
-                binding.llNamePalteImag.setOnClickListener {
-                    viewModel.clickedForImg.value=1
-                    //dispatchTakePictureIntent()
-                }
-                binding.llLtstudImg.setOnClickListener {
-                    viewModel.clickedForImg.value=2
-                    //dispatchTakePictureIntent()
-                }
-                binding.llHtstudImg.setOnClickListener {
-                    viewModel.clickedForImg.value=3
-                    //dispatchTakePictureIntent()
-                }
                 lifecycleScope.launch(Dispatchers.IO) {
                     val circlePos = viewModel.getCirclePosition(dataJir.circleId)
                     val divPos = viewModel.getDivPosition(dataJir.divisionId)
@@ -236,6 +194,18 @@ class Tab1Fragment : Fragment(), Tab1Listner {
                         binding?.optionScheme?.isEnabled = false
                        // binding.calViw.isEnabled=false
                         binding.calViw.isClickable=false
+                    }
+                }
+            }
+            cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val imagePath = result.data?.getStringExtra("image_path")
+                    Log.d("path","path on fragment ${imagePath}")
+                    //Toast.makeText(this, "Photo saved at: $imagePath", Toast.LENGTH_SHORT).show()
+                    when(viewModel.clickedForImg.value){
+                        1->binding.imgDtrNamePalte.setImageBitmap(BitmapFactory.decodeFile(imagePath))
+                        2->binding.imgDtrLtStud.setImageBitmap(BitmapFactory.decodeFile(imagePath))
+                        3->binding.imgHtStud.setImageBitmap(BitmapFactory.decodeFile(imagePath))
                     }
                 }
             }
@@ -555,156 +525,35 @@ class Tab1Fragment : Fragment(), Tab1Listner {
         super.onResume()
 
     }
-
-    private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    ex.printStackTrace()
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        requireActivity(),
-                        "com.example.firstproject.fileprovider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-                }
-            }
-        }
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(requireActivity(), it) == PackageManager.PERMISSION_GRANTED
     }
 
-    lateinit var currentPhotoPath: String
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? =requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES+"/Trwapp/Photos/"+viewModel.trwUniqueCode)
-        return File.createTempFile(
-            "JPEG_${viewModel.trwUniqueCode}_${viewModel.clickedForImg.value}", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intentsclickedForImg
-            currentPhotoPath = absolutePath
-        }
-    }
-
-    private fun askForPermissions(permissionsList: ArrayList<String>) {
-        val newPermissionStr = permissionsList.toTypedArray()
-        if (newPermissionStr.isNotEmpty()) {
-            permissionsLauncher.launch(newPermissionStr)
-        } else {
-            // User has pressed 'Deny & Don't ask again' so we have to show the enable permissions dialog
-            showPermissionDialog()
-        }
-    }
-
-    private fun showPermissionDialog() {
-        val builder = AlertDialog.Builder(requireActivity())
-        builder.setTitle("Permission required")
-            .setMessage("Some permissions need to be allowed to use this app without any problems.")
-            .setPositiveButton("Settings") { dialog, _ ->
-                // Open the app settings page when clicked
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", "com.bih.nic.bsphcl.trwjuc", null)
-                intent.data = uri
-                startActivity(intent)
-                dialog.dismiss() // Dismiss the dialog
-            }
-            .setCancelable(false) // Make the dialog non-cancelable
-
-        if (alertDialog == null) {
-            alertDialog = builder.create()
-            if (!alertDialog!!.isShowing) {
-                alertDialog!!.show()
-            }
-        }
-    }
-
-    private fun hasPermission(context: Context, permissionStr: String): Boolean {
-        return ContextCompat.checkSelfPermission(context, permissionStr) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun takePhoto() {
-
-        val imageFolder = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            ), "Images"
-        )
-        if (!imageFolder.exists()) {
-            imageFolder.mkdir()
-        }
-
-        val fileName = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            .format(System.currentTimeMillis()) + ".jpg"
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME,fileName)
-            put(MediaStore.Images.Media.MIME_TYPE,"image/jpeg")
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
-                put(MediaStore.Images.Media.RELATIVE_PATH,"Pictures/Images")
-            }
-        }
-
-        val metadata = ImageCapture.Metadata().apply {
-            isReversedHorizontal = (lensFacing == CameraSelector.LENS_FACING_FRONT)
-        }
-        val uri =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
+                startCameraActivity()
             } else {
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                Toast.makeText(requireActivity(), "Permissions not granted.", Toast.LENGTH_SHORT).show()
+                //finish()
             }
-        val outputOption =
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                ImageCapture.OutputFileOptions.Builder(
-                    requireActivity().contentResolver,
-                    uri,
-                    contentValues
-                ).setMetadata(metadata).build()
-            }else{
-                val imageFile = File(imageFolder, fileName)
-                ImageCapture.OutputFileOptions.Builder(imageFile)
-                    .setMetadata(metadata).build()
-            }
-
-        imageCapture?.takePicture(
-            outputOption,
-            ContextCompat.getMainExecutor(requireActivity()),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val message = "Photo Capture Succeeded: ${outputFileResults.savedUri}"
-                    Toast.makeText(
-                        requireActivity(),
-                        message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(
-                        requireActivity(),
-                        exception.message.toString(),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-            }
-        )
+        }
     }
 
+    private fun startCamera() {
+        if (allPermissionsGranted()) {
+            startCameraActivity()
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+        }
+    }
 
-
+    private fun startCameraActivity() {
+        val intent = Intent(requireActivity(), CameraActivity::class.java)
+        cameraLauncher.launch(intent)
+    }
 
 }

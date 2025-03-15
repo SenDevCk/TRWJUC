@@ -82,7 +82,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.nav_about -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
 //                    supportFragmentManager.beginTransaction()
 //                    .replace(R.id.fragment_container, AboutFragment()).commit()
-                R.id.nav_logout -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
+
+                R.id.nav_logout ->{
+                    CommanPref.getInstance(this).clearAll()
+                    Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    this.startActivity(intent)
+                }
             }
 
             return true

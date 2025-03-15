@@ -61,4 +61,5 @@ class CommanPref private constructor(context: Context) {
         val user: User = gson.fromJson(json, User::class.java)
         return user
     }
+
 }

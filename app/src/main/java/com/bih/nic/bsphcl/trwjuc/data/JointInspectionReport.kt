@@ -30,8 +30,8 @@ data class JointInspectionReport(
     @ColumnInfo(name = "place")
     var place: String?,
 
-    @ColumnInfo(name = "date_of_birth")
-    var dateOfBirth: String?,
+    @ColumnInfo(name = "date_of_burning")
+    var dateOfBurning: String?,
 
     @ColumnInfo(name = "capacity")
     var capacity: String?,
@@ -51,7 +51,7 @@ data class JointInspectionReport(
     @ColumnInfo(name = "dtr_ok")
     var dtrBodyOK: String?,
 
-    @ColumnInfo(name = "dtr_Def")
+    @ColumnInfo(name = "dtr_def")
     var dtrBodyDef: String?,
 
     @ColumnInfo(name = "ht_stud_ok")

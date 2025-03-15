@@ -1,5 +1,6 @@
 package com.bih.nic.bsphcl.trwjuc.ui
 
+import CommanPref
 import MyPagerAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.bih.nic.bsphcl.trwjuc.R
+import com.bih.nic.bsphcl.trwjuc.data.User
 import com.bih.nic.bsphcl.trwjuc.ui.viewmodels.SharedViewModel
 import com.google.android.material.tabs.TabLayout
 
@@ -34,9 +36,9 @@ class ApplyForNewUC : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         val tabLayout = findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayout)
         val viewPager = findViewById<androidx.viewpager2.widget.ViewPager2>(R.id.viewPager)
-
+        val user: User =CommanPref.getInstance(this).getUser()
         // Set up the adapter for ViewPager2
-        val adapter = MyPagerAdapter(this)
+        val adapter = MyPagerAdapter(this,user)
         viewPager.adapter = adapter
         viewPager.isUserInputEnabled = true
         // Disable nested scrolling for ViewPager2
